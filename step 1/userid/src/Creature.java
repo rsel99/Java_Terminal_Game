@@ -1,21 +1,22 @@
 public class Creature extends Displayable {
-    // public Creature(){
-    //     System.out.println("constructor for creature");
-    // }
+    public Creature(){
+        System.out.println("Creature: constructor");
+    }
 
-    // public void setHp(int h){
-    //     //FILL IN
-    // }
+    public void setHp(int h){
+        System.out.println("Creature: setHp");
+    }
 
-    // public void setHpMoves(int hpm){
-    //     //FILL IN
-    // }
+    public void setHpMoves(int hpm){
+        System.out.println("Creature: setHpMoves");
+    }
 
-    // public void setDeathAction(CreatureAction da){
-    //     //FILL IN
-    // }
+    public void setDeathAction(CreatureAction da){
+        System.out.println("Creature: setDeathAction");
+    }
 
-    // public void setHitAction(CreatureAction ha){
-    //     //FILL IN (type CreatureAction???)
-    // }
+    public void setHitAction(CreatureAction ha){
+        //(type CreatureAction???)
+        System.out.println("Creature: setHitAction");
+    }
 }

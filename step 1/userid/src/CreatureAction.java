@@ -1,6 +1,6 @@
 public class CreatureAction extends Action {
     
-    // public CreatureAction(Creature owner){
-    //     //FILL IN
-    // }
+    public CreatureAction(Creature owner){
+        System.out.println("CreatureAction: constructor");
+    }
 }

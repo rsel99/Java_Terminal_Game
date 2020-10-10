@@ -1,6 +1,10 @@
 public class DropPack extends CreatureAction{
+
+    protected String name;
+    protected Creature owner;
     
     public DropPack(String name, Creature owner){
-        System.out.println("DropPack: constructor");
+        super(owner);
+        System.out.println("DropPack: constructor: name: " + name + ", Creature: " + owner);
     }
 }

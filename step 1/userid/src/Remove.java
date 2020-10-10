@@ -1,6 +1,10 @@
 public class Remove extends CreatureAction{
+
+    protected String name;
+    protected Creature owner;
     
     public Remove(String name, Creature owner){
-        System.out.println("Remove: constructor");
+        super(owner);
+        System.out.println("Remove: constructor: name: " + name + ", Creature: " + owner);
     }
 }

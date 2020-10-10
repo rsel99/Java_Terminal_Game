@@ -1,14 +1,18 @@
 public class Room extends Structure {
+
+    protected String string;
+    protected int room;
+    protected Creature Monster;
     
-    public Room(String str){
-        System.out.println("Room: constructor");
+    public Room(String string){
+        System.out.println("Room: constructor: " + string);
     }
 
     public void setId(int room){
-        System.out.println("Room: setId");
+        System.out.println("Room: setId to " + room);
     }
 
     public void setCreature(Creature Monster){
-        System.out.println("Room: setCreature");
+        System.out.println("Room: setCreature to " + Monster);
     }
 }

@@ -1,6 +1,9 @@
 public class BlessCurseOwner extends ItemAction {
-    
+
+    protected Creature owner;
+
     public BlessCurseOwner(Creature owner){
-        System.out.println("BlessCurseOwner: constructor");
+        super(owner);
+        System.out.println("BlessCurseOwner: constructor: " + owner);
     }
 }

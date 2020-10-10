@@ -1,6 +1,6 @@
 public class Displayable {
 
-    protected int maxHit, hpMoves, Hp, v, x, y;
+    protected int maxhit, hpMoves, Hp, v, x, y;
     protected char t;
 
     public Displayable(){
@@ -15,8 +15,8 @@ public class Displayable {
         System.out.println("Displayable: setVisible");
     }
 
-    public void setMaxHit(int maxHit){
-        System.out.println("Displayable: setMaxHit to " + maxHit);
+    public void setMaxHit(int maxhit){
+        System.out.println("Displayable: setMaxHit to " + maxhit);
     }
 
     public void setHpMove(int hpMoves){

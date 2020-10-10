@@ -1,8 +1,8 @@
 public class Hallucinate extends ItemAction {
 
-    protected Creature owner;
+    protected Item owner;
     
-    public Hallucinate(Creature owner){
+    public Hallucinate(Item owner){
         super(owner);
         System.out.println("Hallucinate: constructor: " + owner);
     }

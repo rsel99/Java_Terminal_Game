@@ -1,8 +1,8 @@
 public class ItemAction extends Action {
 
-    protected Creature owner;
+    protected Item owner;
     
-    public ItemAction(Creature owner){  //should take Creature owner as input
+    public ItemAction(Item owner){  //should take Creature owner as input
         System.out.println("ItemAction: constructor: " + owner);
     }
 }

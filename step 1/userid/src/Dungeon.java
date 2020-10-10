@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Dungeon {
     
-    protected int width, gameHeight;
+    protected int width, gameHeight, topHeight, bottomHeight;
     protected String name;
     protected Room room;
     protected Creature creature;

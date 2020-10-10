@@ -1,6 +1,12 @@
 public class Player extends Creature{
 
     protected Item sword, armor;
+    protected String name;
+    //protected int room, serial;
+
+    public Player(String name){
+        System.out.println("Player: constructor: " + name);
+    }
     
     public void setWeapon(Item sword){
         System.out.println("Player: setWeapon to " + sword);
@@ -9,4 +15,8 @@ public class Player extends Creature{
     public void setArmor(Item armor){
         System.out.println("Player: setArmor to " + armor);
     }
+
+    // public void setID(int room, int serial){
+    //     System.out.println("Player: setID: room: " + room + ", serial: " + serial);
+    // }
 }

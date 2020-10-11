@@ -1,3 +1,5 @@
+package src;
+
 public class Sword extends Item{
 
     protected String name;

@@ -1,3 +1,5 @@
+package src;
+
 public class Item extends Displayable {
 
     protected Creature owner;

@@ -1,3 +1,5 @@
+package src;
+
 public class DropPack extends CreatureAction{
 
     protected String name;

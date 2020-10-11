@@ -1,3 +1,5 @@
+package src;
+
 public class Armor extends Item {
     
     protected String name;

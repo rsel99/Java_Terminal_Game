@@ -1,3 +1,5 @@
+package src;
+
 public class Scroll extends Item {
 
     protected String name;

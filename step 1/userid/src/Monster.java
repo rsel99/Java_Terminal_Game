@@ -1,3 +1,5 @@
+package src;
+
 public class Monster extends Creature {
 
     protected String name;

@@ -1,3 +1,5 @@
+package src;
+
 public class Passage extends Structure {
 
     protected String name;

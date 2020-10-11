@@ -1,3 +1,5 @@
+package src;
+
 public class EndGame extends CreatureAction{
 
     protected String name;

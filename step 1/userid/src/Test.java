@@ -1,3 +1,5 @@
+package src; 
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -5,7 +7,11 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 // import java.util.ArrayList;
 
+
+
 import org.xml.sax.SAXException;
+
+
 
 public class Test{
 
@@ -18,7 +24,7 @@ public class Test{
             case 1:
                // note that the relative file path may depend on what IDE you are
            // using.  This worked for NetBeans.
-               fileName = args[0];
+               fileName = "xmlfiles/" + args[0];
                break;
             default:
                System.out.println("java Test <xmlfilename>");

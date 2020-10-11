@@ -1,3 +1,5 @@
+package src;
+
 public class BlessArmor extends ItemAction {
 
     protected Item owner;

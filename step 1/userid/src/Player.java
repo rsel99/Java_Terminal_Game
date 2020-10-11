@@ -1,3 +1,5 @@
+package src;
+
 public class Player extends Creature {
 
     protected Item sword, armor;

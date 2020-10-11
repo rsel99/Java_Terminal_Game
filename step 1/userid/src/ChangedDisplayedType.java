@@ -1,3 +1,5 @@
+package src;
+
 public class ChangedDisplayedType extends CreatureAction {
 
     protected String name;

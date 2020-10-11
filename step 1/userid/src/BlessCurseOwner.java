@@ -1,3 +1,5 @@
+package src;
+
 public class BlessCurseOwner extends ItemAction {
 
     protected Item owner;

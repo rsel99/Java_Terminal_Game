@@ -1,3 +1,5 @@
+package src;
+
 public class UpdateDisplay extends CreatureAction{
 
     protected String name;

@@ -1,3 +1,5 @@
+package src;
+
 public class Action {
 
     protected String msg;

@@ -1,3 +1,5 @@
+package src;
+
 public class Displayable {
 
     protected int maxhit, hpMoves, Hp, v, x, y;

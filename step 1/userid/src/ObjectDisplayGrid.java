@@ -1,3 +1,5 @@
+package src;
+
 public class ObjectDisplayGrid{
 
     protected int gameHeight, width, topHeight, bottomHeight;

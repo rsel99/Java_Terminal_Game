@@ -1,3 +1,5 @@
+package src;
+
 public class Hallucinate extends ItemAction {
 
     protected Item owner;

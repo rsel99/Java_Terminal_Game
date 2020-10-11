@@ -1,3 +1,5 @@
+package src;
+
 public class YouWin extends CreatureAction{
 
     protected String name;

@@ -119,7 +119,7 @@ public class RogueXMLHandler extends DefaultHandler {
             this.sword = true;
         }
         else if (qName.equalsIgnoreCase("Armor")) {
-            Armor armor = new Armor(attributes.getValue("Armor"));
+            Armor armor = new Armor(attributes.getValue("name"));
             armor.setID(Integer.parseInt(attributes.getValue("room")), Integer.parseInt(attributes.getValue("serial")));
             disps.push(armor);
             this.armor = true;
@@ -326,6 +326,44 @@ public class RogueXMLHandler extends DefaultHandler {
             // acts.push(creatureaction);
             this.creatureaction = false;
         }
+        else if (scroll) {
+            Scroll scroll = (Scroll) disps.pop();
+            Room room = (Room) disps.pop();
+            room.addItem(scroll);
+            disps.push(room);
+            this.scroll = false;
+        }
+        else if (sword) {
+            if(player){
+                Sword sword = (Sword) disps.pop();
+                Player player = (Player) disps.pop();
+                player.setWeapon(sword);
+                disps.push(player);
+            }
+            else{
+                Sword sword = (Sword) disps.pop();
+                Room room = (Room) disps.pop();
+                room.addItem(sword);
+                // disps.push(sword);
+                disps.push(room);
+            }
+            this.sword = false;
+        }
+        else if (armor) {
+            if(player){
+                Armor armor = (Armor) disps.pop();
+                Player player = (Player) disps.pop();
+                player.setArmor(armor);
+                disps.push(player);
+            }
+            else{
+                Armor armor = (Armor) disps.pop();
+                Room room = (Room) disps.pop();
+                room.addItem(armor);
+                disps.push(room);
+            }
+            this.armor = false;
+        }
         else if (player) {
             Player player = (Player) disps.pop();
             Room room = (Room) disps.pop();
@@ -340,28 +378,6 @@ public class RogueXMLHandler extends DefaultHandler {
             room.setCreature(monster);
             disps.push(room);
             this.monster = false;
-        }
-        else if (scroll) {
-            Scroll scroll = (Scroll) disps.pop();
-            Room room = (Room) disps.pop();
-            room.addItem(scroll);
-            disps.push(room);
-            this.scroll = false;
-        }
-        else if (sword) {
-            Sword sword = (Sword) disps.pop();
-            Room room = (Room) disps.pop();
-            room.addItem(sword);
-            // disps.push(sword);
-            disps.push(room);
-            this.sword = false;
-        }
-        else if (armor) {
-            Armor armor = (Armor) disps.pop();
-            Room room = (Room) disps.pop();
-            room.addItem(armor);
-            disps.push(room);
-            this.armor = false;
         }
         else if (room) {
             Room room = (Room) disps.pop();

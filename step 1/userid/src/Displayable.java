@@ -1,10 +1,12 @@
+package src;
+
 public class Displayable {
 
     protected int maxhit, hpMoves, Hp, v, x, y;
     protected char t;
 
     public Displayable(){
-        System.out.println("Displayable: constructor");
+        System.out.println("Displayable: constructor, " + this);
     }
 
     public void setInvisible(){

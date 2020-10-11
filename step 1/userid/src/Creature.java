@@ -1,10 +1,12 @@
+package src;
+
 public class Creature extends Displayable {
 
     protected int h, hpm;
     protected CreatureAction da, ha;
 
     public Creature(){
-        System.out.println("Creature: constructor");
+        System.out.println("Creature: constructor, " + this);
     }
 
     public void setHp(int h){

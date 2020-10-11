@@ -1,3 +1,5 @@
+package src;
+
 public class ObjectDisplayGrid{
 
     protected int gameHeight, width, topHeight, bottomHeight;
@@ -7,6 +9,7 @@ public class ObjectDisplayGrid{
     }
 
     public void setTopMessageHeight(int topHeight){
+        this.topHeight = topHeight;
         System.out.println("ObjectDisplayGrid: setTopMessageHeight to " + topHeight);
     }
 }

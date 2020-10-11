@@ -1,11 +1,17 @@
+package src; 
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+// import java.util.ArrayList;
+
+
 
 import org.xml.sax.SAXException;
+
+
 
 public class Test{
 
@@ -18,7 +24,7 @@ public class Test{
             case 1:
                // note that the relative file path may depend on what IDE you are
            // using.  This worked for NetBeans.
-               fileName = args[0];
+               fileName = "xmlfiles/" + args[0];
                break;
             default:
                System.out.println("java Test <xmlfilename>");
@@ -40,12 +46,12 @@ public class Test{
             // just copy this.  This will parse the xml file given by fileName
                 saxParser.parse(new File(fileName), handler);
             // This will change depending on what kind of XML we are parsing
-                ArrayList<Dungeon> dungeons = handler.getDungeons();
+                Dungeon dungeon = handler.getDungeon();
             // print out all of the students.  This will change depending on 
             // what kind of XML we are parsing
-                for (Dungeon dungeon : dungeons) {
-                    System.out.println(dungeon);
-                }
+                // for (Dungeon dungeon : dungeons) {
+                System.out.println(dungeon);
+                // }
                 /*
                  * the above is a different form of 
                  for (int i = 0; i < students.length; i++) {

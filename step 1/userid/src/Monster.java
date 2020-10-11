@@ -3,7 +3,7 @@ public class Monster extends Creature {
     protected String name;
     protected int room, serial;
     
-    public Monster(){
+    public Monster(String name, int room, int serial){
         System.out.println("Monster: constructor");
     }
 

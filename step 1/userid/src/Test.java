@@ -40,12 +40,12 @@ public class Test{
             // just copy this.  This will parse the xml file given by fileName
                 saxParser.parse(new File(fileName), handler);
             // This will change depending on what kind of XML we are parsing
-                ArrayList<Dungeon> dungeons = handler.getDungeons();
+                Dungeon dungeon = handler.getDungeon();
             // print out all of the students.  This will change depending on 
             // what kind of XML we are parsing
-                for (Dungeon dungeon : dungeons) {
-                    System.out.println(dungeon);
-                }
+                //for (Dungeon dungeon : dungeons) {
+                System.out.println(dungeon);
+                //}
                 /*
                  * the above is a different form of 
                  for (int i = 0; i < students.length; i++) {

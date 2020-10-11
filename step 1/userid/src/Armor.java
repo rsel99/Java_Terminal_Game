@@ -4,7 +4,8 @@ public class Armor extends Item {
     protected int room, serial;
 
     public Armor(String name){
-        System.out.println("Armor: constructor: " + name);
+        this.name = name;
+        System.out.println("Armor: constructor: " + name + ", " + this);
     }
 
     public void setName(String name){

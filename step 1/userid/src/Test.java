@@ -3,7 +3,7 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
 import org.xml.sax.SAXException;
 
@@ -43,9 +43,9 @@ public class Test{
                 Dungeon dungeon = handler.getDungeon();
             // print out all of the students.  This will change depending on 
             // what kind of XML we are parsing
-                //for (Dungeon dungeon : dungeons) {
+                // for (Dungeon dungeon : dungeons) {
                 System.out.println(dungeon);
-                //}
+                // }
                 /*
                  * the above is a different form of 
                  for (int i = 0; i < students.length; i++) {

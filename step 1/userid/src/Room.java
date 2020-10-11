@@ -9,7 +9,8 @@ public class Room extends Structure {
     protected ArrayList<Item> items = new ArrayList<Item>();
     
     public Room(String string){
-        System.out.println("Room: constructor: " + string);
+        this.string = string;
+        System.out.println("Room: constructor: " + string + ", " + this);
     }
 
     public void setId(int room){

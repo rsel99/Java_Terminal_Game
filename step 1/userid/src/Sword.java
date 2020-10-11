@@ -4,7 +4,8 @@ public class Sword extends Item{
     protected int room, serial;
     
     public Sword(String name){
-        System.out.println("Sword: constructor: " + name);
+        this.name = name;
+        System.out.println("Sword: constructor: " + name + ", " + this);
     }
 
     public void setID(int room, int serial){

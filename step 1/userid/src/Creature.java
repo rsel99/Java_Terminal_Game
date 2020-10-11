@@ -4,7 +4,7 @@ public class Creature extends Displayable {
     protected CreatureAction da, ha;
 
     public Creature(){
-        System.out.println("Creature: constructor");
+        System.out.println("Creature: constructor, " + this);
     }
 
     public void setHp(int h){

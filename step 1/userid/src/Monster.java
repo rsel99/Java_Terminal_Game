@@ -4,7 +4,10 @@ public class Monster extends Creature {
     protected int room, serial;
     
     public Monster(String name, int room, int serial){
-        System.out.println("Monster: constructor");
+        this.name = name;
+        this.room = room;
+        this.serial = serial;
+        System.out.println("Monster: constructor, " + this);
     }
 
     public void setName(String name){

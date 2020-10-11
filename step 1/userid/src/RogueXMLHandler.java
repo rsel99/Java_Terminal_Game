@@ -140,16 +140,22 @@ public class RogueXMLHandler extends DefaultHandler {
 
         // TODO: Needs work, not sure where to store it
         else if (qName.equalsIgnoreCase("ItemAction")) {
+            //ItemAction itemaction = new ItemAction(attributes.getValue("name"), attributes.getValue("type"));
             String name = attributes.getValue("name");
+            // String type = attributes.getValue("type");
             Item tmpItem = (Item) disps.pop();
             switch(name) {
                 case "Hallucinate":
                     Hallucinate hallucinate = new Hallucinate(tmpItem);
                     acts.push(hallucinate);
                     break;
-                case "BlessArmor":
+                case "BlessCurseOwner":
                     BlessCurseOwner blesscurseowner = new BlessCurseOwner(tmpItem);
                     acts.push(blesscurseowner);
+                    break;
+                case "BlessArmor":
+                    BlessArmor blessarmor = new BlessArmor(tmpItem);
+                    acts.push(blessarmor);
                     break;
                 default:
                     ItemAction itemaction = new ItemAction(tmpItem);
@@ -164,6 +170,7 @@ public class RogueXMLHandler extends DefaultHandler {
             String name = attributes.getValue("name");
             String type = attributes.getValue("type");
             Creature tmpCreature = (Creature) disps.pop();
+            // CreatureAction creatureaction = new CreatureAction(attrattributes.getValue("name"), attributes.getValue("type"));
             switch(name) {
                 case "YouWin":
                     YouWin youwin = new YouWin(name, type, tmpCreature);
@@ -194,7 +201,7 @@ public class RogueXMLHandler extends DefaultHandler {
                     acts.push(endgame);
                     break;
                 default:
-                    CreatureAction creatureaction = new CreatureAction(tmpCreature);
+                    CreatureAction creatureaction = new CreatureAction(tmpCreature, name, type);
                     acts.push(creatureaction);
                     break;
             }
@@ -307,18 +314,23 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (creatureaction) {
             CreatureAction creatureaction = (CreatureAction) acts.pop();
             Creature creature = (Creature) disps.pop();
+            // disps.push(creature);
             if (creatureaction.getType().equalsIgnoreCase("death")) {
                 creature.setDeathAction(creatureaction);
+                // if(creatureaction.getName().equalsIgnoreCase("YouWin")) disps.pop();
             }
             else if (creatureaction.getType().equalsIgnoreCase("hit")) {
                 creature.setHitAction(creatureaction);
             }
+            disps.push(creature);
+            // acts.push(creatureaction);
             this.creatureaction = false;
         }
         else if (player) {
             Player player = (Player) disps.pop();
             Room room = (Room) disps.pop();
             room.setPlayer(player);
+            // disps.push(player);
             disps.push(room);
             this.player = false;
         }
@@ -340,6 +352,7 @@ public class RogueXMLHandler extends DefaultHandler {
             Sword sword = (Sword) disps.pop();
             Room room = (Room) disps.pop();
             room.addItem(sword);
+            // disps.push(sword);
             disps.push(room);
             this.sword = false;
         }

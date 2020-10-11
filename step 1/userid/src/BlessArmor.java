@@ -4,6 +4,7 @@ public class BlessArmor extends ItemAction {
 
     public BlessArmor(Item owner){
         super(owner);
-        System.out.println("BlessArmor: constructor: " + owner);
+        this.owner = owner;
+        System.out.println("BlessArmor: constructor: " + owner + ", " + this);
     }
 }

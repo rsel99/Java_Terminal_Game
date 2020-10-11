@@ -5,9 +5,9 @@ public class ChangedDisplayedType extends CreatureAction {
     protected String type;
     
     public ChangedDisplayedType(String name, String type, Creature owner){
-        super(owner);
+        super(owner, name, type);
         this.name = name;
         this.type = type;
-        System.out.println("ChangedDisplayedType: constructor: name: " + name + ", Creature: " + owner);
+        System.out.println("ChangedDisplayedType: constructor: name: " + name + ", Creature: " + owner + ", " + this);
     }
 }

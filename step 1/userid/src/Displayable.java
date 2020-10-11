@@ -4,7 +4,7 @@ public class Displayable {
     protected char t;
 
     public Displayable(){
-        System.out.println("Displayable: constructor");
+        System.out.println("Displayable: constructor, " + this);
     }
 
     public void setInvisible(){

@@ -5,9 +5,10 @@ public class Remove extends CreatureAction{
     protected Creature owner;
     
     public Remove(String name, String type, Creature owner){
-        super(owner);
+        super(owner, name, type);
         this.name = name;
         this.type = type;
-        System.out.println("Remove: constructor: name: " + name + ", Creature: " + owner);
+        this.owner = owner;
+        System.out.println("Remove: constructor: name: " + name + ", Creature: " + owner + ", " + this);
     }
 }

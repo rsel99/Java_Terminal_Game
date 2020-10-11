@@ -16,17 +16,21 @@ public class Room extends Structure {
     }
 
     public void setId(int room){
+        this.room = room;
         System.out.println("Room: setId to " + room);
     }
 
     public void setCreature(Creature Monster){
+        this.Monster = Monster;
         System.out.println("Room: setCreature to " + Monster);
     }
     public void setPlayer(Creature Player) {
         this.Player = Player;
+        System.out.println("Room: setPlayer to " + Player);
     }
 
     public void addItem(Item item) {
         this.items.add(item);
+        System.out.println("Room: addItem " + item);
     }
 }

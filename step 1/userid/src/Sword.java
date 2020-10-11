@@ -11,6 +11,8 @@ public class Sword extends Item{
     }
 
     public void setID(int room, int serial){
+        this.room = room;
+        this.serial = serial;
         System.out.println("Sword: setID: room: " + room + ", serial: " + serial);
     }
 }

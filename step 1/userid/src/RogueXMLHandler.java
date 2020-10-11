@@ -144,23 +144,23 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (qName.equalsIgnoreCase("ItemAction")) {
             //ItemAction itemaction = new ItemAction(attributes.getValue("name"), attributes.getValue("type"));
             String name = attributes.getValue("name");
-            // String type = attributes.getValue("type");
+            String type = attributes.getValue("type");
             Item tmpItem = (Item) disps.pop();
             switch(name) {
                 case "Hallucinate":
-                    Hallucinate hallucinate = new Hallucinate(tmpItem);
+                    Hallucinate hallucinate = new Hallucinate(tmpItem, name, type);
                     acts.push(hallucinate);
                     break;
                 case "BlessCurseOwner":
-                    BlessCurseOwner blesscurseowner = new BlessCurseOwner(tmpItem);
+                    BlessCurseOwner blesscurseowner = new BlessCurseOwner(tmpItem, name, type);
                     acts.push(blesscurseowner);
                     break;
                 case "BlessArmor":
-                    BlessArmor blessarmor = new BlessArmor(tmpItem);
+                    BlessArmor blessarmor = new BlessArmor(tmpItem, name, type);
                     acts.push(blessarmor);
                     break;
                 default:
-                    ItemAction itemaction = new ItemAction(tmpItem);
+                    ItemAction itemaction = new ItemAction(tmpItem, name, type);
                     acts.push(itemaction);
                     break;
             }

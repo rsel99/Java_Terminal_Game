@@ -11,10 +11,13 @@ public class Armor extends Item {
     }
 
     public void setName(String name){
+        this.name = name;
         System.out.println("Armor: setName to " + name);
     }
 
     public void setID(int room, int serial){
+        this.room = room;
+        this.serial = serial;
         System.out.println("Armor: setID: room: " + room + ", serial: " + serial);
     }
 }

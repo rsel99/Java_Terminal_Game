@@ -10,7 +10,7 @@ public class Player extends Creature {
         this.name = name;
         this.room = room;
         this.serial = serial;
-        System.out.println("Player: constructor: " + name + ", " + this);
+        System.out.println("Player: constructor, name: " + name + ", room: " + room + ", serial: " + serial + ", " + this);
     }
     
     public void setWeapon(Item sword){

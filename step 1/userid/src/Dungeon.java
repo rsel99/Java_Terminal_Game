@@ -18,7 +18,7 @@ public class Dungeon {
         this.topHeight = topHeight;
         this.bottomHeight = bottomHeight;
 
-        System.out.println("Dungeon: getDungeon: name: " + name + ", width: " + width + ", gameHeight: " + gameHeight + ", " + this);
+        System.out.println("Dungeon: getDungeon: name: " + name + ", width: " + width + ", gameHeight: " + gameHeight + ", topHeight: "+ topHeight + ", bottomHeight: "+bottomHeight+", " + this);
     }
 
     public void addRoom(Room room){

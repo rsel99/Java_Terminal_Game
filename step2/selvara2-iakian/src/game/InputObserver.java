@@ -1,3 +1,4 @@
+package src.game;
 
 public interface InputObserver {
 

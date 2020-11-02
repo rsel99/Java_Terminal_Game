@@ -1,4 +1,4 @@
-
+package src.game;
 import asciiPanel.AsciiPanel;
 import javax.swing.*;
 import java.awt.event.*;

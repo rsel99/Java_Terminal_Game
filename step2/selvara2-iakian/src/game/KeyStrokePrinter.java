@@ -1,4 +1,4 @@
-
+package src.game;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

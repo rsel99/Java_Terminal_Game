@@ -61,4 +61,40 @@ public class Displayable {
         this.h = h;
         System.out.println("Displayable: setHeight to " + h);
     }
+
+    public int getMaxHit(){
+        return this.maxhit;
+    }
+
+    public int getHpMove(){
+        return this.hpMoves;
+    }
+
+    public int getHp(){
+        return this.Hp;
+    }
+
+    public int getType(){
+       return this.t;
+    }
+
+    public int getIntValue(){
+        return this.v;
+    }
+
+    public int getPosX(){
+        return this.x;
+    }
+
+    public int getPosY(){
+        return this.y;
+    }
+
+    public int getWidth(){
+        return this.w;
+    }
+
+    public int getHeight(){
+        return this.h;
+    }
 }

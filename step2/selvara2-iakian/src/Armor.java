@@ -7,6 +7,7 @@ public class Armor extends Item {
 
     public Armor(String name){
         this.name = name;
+        this.setType(']');
         System.out.println("Armor: constructor: " + name + ", " + this);
     }
 

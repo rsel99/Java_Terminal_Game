@@ -44,6 +44,7 @@ public class Dungeon {
     public ArrayList<Room> getRooms() {
         return this.rooms;
     }
+
     public ArrayList<Passage> getPassages() {
         return this.passage;
     }

@@ -7,6 +7,7 @@ public class Scroll extends Item {
     
     public Scroll(String name){
         this.name = name;
+        this.setType('?');
         System.out.println("Scroll: constructor: " + name + ", " + this);
     }
 

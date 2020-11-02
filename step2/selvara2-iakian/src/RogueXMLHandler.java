@@ -377,7 +377,7 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (monster) {
             Monster monster = (Monster) disps.pop();
             Room room = (Room) disps.pop();
-            room.setCreature(monster);
+            room.addCreature(monster);
             disps.push(room);
             this.monster = false;
         }

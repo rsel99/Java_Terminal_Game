@@ -6,7 +6,7 @@ public class Room extends Structure {
 
     protected String string;
     protected int room;
-    protected Creature Monster;
+    protected ArrayList<Creature> monsters = new ArrayList<Creature>();
     protected Creature Player;
     protected ArrayList<Item> items = new ArrayList<Item>();
     
@@ -20,8 +20,8 @@ public class Room extends Structure {
         System.out.println("Room: setId to " + room);
     }
 
-    public void setCreature(Creature Monster){
-        this.Monster = Monster;
+    public void addCreature(Creature Monster){
+        this.monsters.add(Monster);
         System.out.println("Room: setCreature to " + Monster);
     }
     public void setPlayer(Creature Player) {
@@ -36,5 +36,13 @@ public class Room extends Structure {
 
     public ArrayList<Item> getItems() {
         return this.items;
+    }
+
+    public Creature getPlayer() {
+        return this.Player;
+    }
+
+    public ArrayList<Creature> getMonsters() {
+        return this.monsters;
     }
 }

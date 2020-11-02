@@ -10,6 +10,7 @@ public class Player extends Creature {
         this.name = name;
         this.room = room;
         this.serial = serial;
+        this.setType('@');
         System.out.println("Player: constructor, name: " + name + ", room: " + room + ", serial: " + serial + ", " + this);
     }
     

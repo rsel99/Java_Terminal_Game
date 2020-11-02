@@ -1,9 +1,11 @@
-// package src.game;        we should figure out the package stuff after, for now I'm compiling locally and it works
+package src.game;        // we should figure out the package stuff after, for now I'm compiling locally and it works
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.util.*;
+import java.lang.Math;
 
 public class Rogue implements Runnable {
     private static final int DEBUG = 0;
@@ -21,36 +23,78 @@ public class Rogue implements Runnable {
         this.dungeon = dungeon;
         WIDTH = width;
         HEIGHT = height;
-        displayGrid = new ObjectDisplayGrid(width, height, dungeon);
+        displayGrid = new ObjectDisplayGrid(width, height);
     }
 
     @Override
     public void run() {
-        // displayGrid.fireUp();
-        // for (int i = 0; i < WIDTH; i += 1) {
-        //     for (int j = 0; j < HEIGHT; j += 1) {
-        //         // TODO: implement printing creatures, items, player to screen
-        //         // displayGrid.addObjectToDisplay(new Char('X'), i, j);
-
-        //     }
-        // }
 
         ArrayList<Room> rooms = this.dungeon.getRooms();
         ArrayList<Passage> passages = this.dungeon.getPassages();
+        
+        for (Passage passage : passages) {
+            Queue<Integer> X = passage.getX();
+            Queue<Integer> Y = passage.getY();
+            int x = X.poll();
+            int y = Y.poll();
+            for (int i = 1; i < X.size(); i++) {  
+                int x2 = X.poll();
+                int y2 = Y.poll();
+                if(x == x2){
+                    for(int j = Math.min(y, y2); j <= Math.max(y, y2); j++){
+                        objectGrid[x][j + this.dungeon.getTopHeight()].push(passage);
+                    }
+                }
+                else{
+                    for(int j = Math.min(x, x2); j <= Math.max(x, x2); j++){
+                        objectGrid[j][y + this.dungeon.getTopHeight()].push(passage);
+                    }
+                }
+                x = x2;
+                y = y2;
+            }
+        }
 
         for (Room room : rooms) {
+            ArrayList<Creature> monsters = room.getMonsters();
+            ArrayList<Item> items = room.getItems();
+            Creature player = room.getPlayer();
+
             for (int i = this.dungeon.getTopHeight() + room.getPosY(); i <= room.getHeight(); i++) {
                 for (int j = room.getPosX(); j < room.getWidth(); j++) {
                     objectGrid[i][j].push(room);
                 }
             }
-            // Map the items to 2D stack
+
+            for (Item item : items){
+                objectGrid[item.getPosX() + room.getPosX()][item.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(item);
+            }
+
+            for (Creature monster : monsters){
+                objectGrid[monster.getPosX() + room.getPosX()][monster.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(monster);
+            }
+
+            objectGrid[player.getPosX() + room.getPosX()][player.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(player);
+     
         }
-        for (Passage passage : passages) {
-            for (int i = this.dungeon.getTopHeight() + passage.getPosY(); i <= passage.getHeight(); i++) {
-                for (int j = passage.getPosX(); j < passage.getWidth(); j++) {
-                    objectGrid[i][j].push(passage);
+
+        displayGrid.fireUp();
+        for (int i = 0; i < WIDTH; i += 1) {
+            for (int j = 0; j < HEIGHT; j += 1) {
+                int k = objectGrid[i][j].length();
+                if(k == 1){
+                    displayGrid.addObjectToDisplay(new Char (getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
                 }
+                else if (k > 1){
+                    Displayable disp = objectGrid[i][j].pop();
+                    if(disp.getClass() == Room.class){
+                        displayGrid.addObjectToDisplay(new Char ('+'), i, j);
+                    }
+                    else{
+                        displayGrid.addObjectToDisplay(new Char (getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
+                    }
+                }
+
             }
         }
 
@@ -60,6 +104,26 @@ public class Rogue implements Runnable {
             e.printStackTrace(System.err);
         }
         displayGrid.initializeDisplay();
+    }
+
+    public char getDisplayChar(Displayable disp, int x, int y){
+        if(disp.getClass() == Creature.class){
+            return disp.getType();
+        }
+        if(disp.getClass() == Item.class){
+            return disp.getType();
+        }
+        else if(disp.getClass() == Room.class){
+            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() || y == disp.getPosY() + disp.getTopHeight() || y == disp.getPosY() + disp.getTopHeight() + disp.getHeight()){
+                return 'X';
+            }
+            else{
+                return '.';
+            }
+        }
+        else if(disp.getClass() == Passage.class){
+            return '#';
+        }
     }
 
     public static void main(String[] args) throws Exception {

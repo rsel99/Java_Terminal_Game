@@ -7,6 +7,7 @@ public class Sword extends Item{
     
     public Sword(String name){
         this.name = name;
+        this.setType(')');
         System.out.println("Sword: constructor: " + name + ", " + this);
     }
 

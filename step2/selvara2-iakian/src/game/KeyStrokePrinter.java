@@ -64,4 +64,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
             working = (processInput( ));
         }
     }
+
+    public Queue<Character> getInputQueue() {
+        return this.inputQueue;
+    }
 }

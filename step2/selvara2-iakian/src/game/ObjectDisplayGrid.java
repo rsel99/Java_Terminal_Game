@@ -11,16 +11,19 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static final String CLASSID = ".ObjectDisplayGrid";
 
     private static AsciiPanel terminal;
-    private Char[][] objectGrid = null;
+    private Stack<Displayable>[][] objectGrid = null;
 
     private List<InputObserver> inputObservers = null;
 
     private static int height;
     private static int width;
+    private Dungeon dungeon;
 
-    public ObjectDisplayGrid(int _width, int _height) {
+
+    public ObjectDisplayGrid(int _width, int _height, Dungeon dungeon) {
         width = _width;
         height = _height;
+        this.dungeon = dungeon; 
 
         terminal = new AsciiPanel(width, height);
 

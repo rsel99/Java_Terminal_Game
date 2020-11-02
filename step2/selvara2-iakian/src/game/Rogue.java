@@ -38,7 +38,21 @@ public class Rogue implements Runnable {
         ArrayList<Room> rooms = this.dungeon.getRooms();
         ArrayList<Passage> passages = this.dungeon.getPassages();
 
-        for 
+        for (Room room : rooms) {
+            for (int i = this.dungeon.getTopHeight() + room.getPosY(); i <= room.getHeight(); i++) {
+                for (int j = room.getPosX(); j < room.getWidth(); j++) {
+                    objectGrid[i][j].push(room);
+                }
+            }
+            // Map the items to 2D stack
+        }
+        for (Passage passage : passages) {
+            for (int i = this.dungeon.getTopHeight() + passage.getPosY(); i <= passage.getHeight(); i++) {
+                for (int j = passage.getPosX(); j < passage.getWidth(); j++) {
+                    objectGrid[i][j].push(passage);
+                }
+            }
+        }
 
         try {
             Thread.sleep(2000);

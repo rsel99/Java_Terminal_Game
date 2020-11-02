@@ -40,4 +40,27 @@ public class Dungeon {
         this.item = item;
         System.out.println("Dungeon: addItem: " + item);
     }
+
+    public ArrayList<Room> getRooms() {
+        return this.rooms;
+    }
+    public ArrayList<Passage> getPassages() {
+        return this.passage;
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+    
+    public int getGameHeight() {
+        return this.gameHeight;
+    }
+    
+    public int getTopHeight() {
+        return this.topHeight;
+    }
+    
+    public int getBottomHeight() {
+        return this.bottomHeight;
+    }
 }

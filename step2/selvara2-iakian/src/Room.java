@@ -33,4 +33,8 @@ public class Room extends Structure {
         this.items.add(item);
         System.out.println("Room: addItem " + item);
     }
+
+    public ArrayList<Item> getItems() {
+        return this.items;
+    }
 }

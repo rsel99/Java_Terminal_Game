@@ -1,4 +1,4 @@
-package src;
+package game;
 
 public class Teleport extends CreatureAction {
 

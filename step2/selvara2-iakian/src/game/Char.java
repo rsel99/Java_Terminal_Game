@@ -1,4 +1,4 @@
-package src.game;
+package game;
 public class Char {
 
     public static final String CLASSID = "Char";

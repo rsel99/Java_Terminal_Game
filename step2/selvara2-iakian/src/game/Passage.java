@@ -1,4 +1,4 @@
-package src;
+package game;
 import java.util.Queue;
 
 public class Passage extends Structure {
@@ -29,7 +29,7 @@ public class Passage extends Structure {
     }
 
     @Override
-    public void setPosX(int x){
+    public void setPosY(int y){
         Y.add(y);
     }
 

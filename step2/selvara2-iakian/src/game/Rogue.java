@@ -1,4 +1,4 @@
-package src.game;        // we should figure out the package stuff after, for now I'm compiling locally and it works
+package game;        // we should figure out the package stuff after, for now I'm compiling locally and it works
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -81,9 +81,9 @@ public class Rogue implements Runnable {
         displayGrid.fireUp();
         for (int i = 0; i < WIDTH; i += 1) {
             for (int j = 0; j < HEIGHT; j += 1) {
-                int k = objectGrid[i][j].length();
+                int k = objectGrid[i][j].size();
                 if(k == 1){
-                    displayGrid.addObjectToDisplay(new Char (getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
+                    displayGrid.addObjectToDisplay(new Char ((char)getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
                 }
                 else if (k > 1){
                     Displayable disp = objectGrid[i][j].pop();
@@ -91,7 +91,7 @@ public class Rogue implements Runnable {
                         displayGrid.addObjectToDisplay(new Char ('+'), i, j);
                     }
                     else{
-                        displayGrid.addObjectToDisplay(new Char (getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
+                        displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar(objectGrid[i][j].pop(), i, j))), i, j);
                     }
                 }
 
@@ -108,22 +108,23 @@ public class Rogue implements Runnable {
 
     public char getDisplayChar(Displayable disp, int x, int y){
         if(disp.getClass() == Creature.class){
-            return disp.getType();
+            return ((char)disp.getType());
         }
         if(disp.getClass() == Item.class){
-            return disp.getType();
+            return ((char)disp.getType());
         }
         else if(disp.getClass() == Room.class){
-            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() || y == disp.getPosY() + disp.getTopHeight() || y == disp.getPosY() + disp.getTopHeight() + disp.getHeight()){
-                return 'X';
+            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight()){
+                return ((char) 'X');
             }
             else{
-                return '.';
+                return ((char) '.');
             }
         }
         else if(disp.getClass() == Passage.class){
-            return '#';
+            return ((char) '#');
         }
+        return ' ';
     }
 
     public static void main(String[] args) throws Exception {
@@ -143,7 +144,7 @@ public class Rogue implements Runnable {
         // We haven't covered exceptions, so just copy the try { } catch {...}
         // exactly, // filling in what needs to be changed between the open and
         // closed braces.
-        try {
+        // try {
             // just copy this
             SAXParser saxParser = saxParserFactory.newSAXParser();
             // just copy this
@@ -174,8 +175,8 @@ public class Rogue implements Runnable {
             testThread.join();
             rogue.keyStrokePrinter.join();
 
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace(System.out);
-        }
+        // } catch (ParserConfigurationException | SAXException | IOException e) {
+        //     e.printStackTrace(System.out);
+        // }
     }
 }

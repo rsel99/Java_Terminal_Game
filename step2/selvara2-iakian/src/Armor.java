@@ -20,4 +20,16 @@ public class Armor extends Item {
         this.serial = serial;
         System.out.println("Armor: setID: room: " + room + ", serial: " + serial);
     }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public int getRoom(){
+        return this.room;
+    }
+
+    public int getSerial(){
+        return this.serial;
+    }
 }

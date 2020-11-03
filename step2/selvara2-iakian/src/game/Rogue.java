@@ -6,6 +6,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
 import java.lang.Math;
+import java.time.*;
 
 public class Rogue implements Runnable {
     private static final int DEBUG = 0;
@@ -14,16 +15,23 @@ public class Rogue implements Runnable {
     public static final int TIMEPERLOOP = 1000000000 / FRAMESPERSECOND;
     private static ObjectDisplayGrid displayGrid = null;
     private Thread keyStrokePrinter;
-    private int WIDTH;
-    private int HEIGHT;
+    private int WIDTH = 80;
+    private int HEIGHT = 40;
     private Dungeon dungeon;
-    private Stack<Displayable>[][] objectGrid = null;
+    private Stack[][] objectGrid;
 
     public Rogue(int width, int height, Dungeon dungeon) {
         this.dungeon = dungeon;
         WIDTH = width;
         HEIGHT = height;
-        displayGrid = new ObjectDisplayGrid(width, height);
+        displayGrid = new ObjectDisplayGrid(WIDTH, HEIGHT);
+
+        objectGrid = new Stack[WIDTH][HEIGHT];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                objectGrid[i][j] = new Stack<Displayable>();
+            }
+        }
     }
 
     @Override
@@ -78,32 +86,40 @@ public class Rogue implements Runnable {
      
         }
 
-        displayGrid.fireUp();
+        // for (int i = 0; i < WIDTH; i++) {
+        //     for (int j = 0; j < HEIGHT; j++) {
+        //         if (objectGrid[i][j].size() != 0) {
+        //             System.out.println("Stack: " + objectGrid[i][j].toString());
+        //         }
+        //     }
+        // }
+
+        //displayGrid.fireUp();
         for (int i = 0; i < WIDTH; i += 1) {
             for (int j = 0; j < HEIGHT; j += 1) {
                 int k = objectGrid[i][j].size();
                 if(k == 1){
-                    displayGrid.addObjectToDisplay(new Char ((char)getDisplayChar(objectGrid[i][j].pop(), i, j)), i, j);
+                    displayGrid.addObjectToDisplay(new Char ((char)getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j)), i, j);
                 }
                 else if (k > 1){
-                    Displayable disp = objectGrid[i][j].pop();
+                    Displayable disp = (Displayable) objectGrid[i][j].pop();
                     if(disp.getClass() == Room.class){
                         displayGrid.addObjectToDisplay(new Char ('+'), i, j);
                     }
                     else{
-                        displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar(objectGrid[i][j].pop(), i, j))), i, j);
+                        displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
                     }
                 }
 
             }
         }
-
+        
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace(System.err);
         }
-        displayGrid.initializeDisplay();
+        // displayGrid.initializeDisplay();
     }
 
     public char getDisplayChar(Displayable disp, int x, int y){
@@ -165,10 +181,12 @@ public class Rogue implements Runnable {
             // these lines should be copied exactly.
             int width = dungeon.getWidth();
             int height = dungeon.getGameHeight() + dungeon.getTopHeight() + dungeon.getBottomHeight();
+
             Rogue rogue = new Rogue(width, height, dungeon);
+            // Thread.sleep(10000);
             Thread testThread = new Thread(rogue);
             testThread.start();
-
+            
             rogue.keyStrokePrinter = new Thread(new KeyStrokePrinter(displayGrid));
             rogue.keyStrokePrinter.start();
 

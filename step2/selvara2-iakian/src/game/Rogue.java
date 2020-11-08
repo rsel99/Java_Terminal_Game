@@ -29,6 +29,7 @@ public class Rogue implements Runnable {
         objectGrid = new Stack[WIDTH][HEIGHT];
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
+                // System.out.println("### DEBUG ###");
                 objectGrid[i][j] = new Stack<Displayable>();
             }
         }
@@ -67,44 +68,57 @@ public class Rogue implements Runnable {
             ArrayList<Creature> monsters = room.getMonsters();
             ArrayList<Item> items = room.getItems();
             Creature player = room.getPlayer();
-
-            for (int i = this.dungeon.getTopHeight() + room.getPosY(); i <= room.getHeight(); i++) {
-                for (int j = room.getPosX(); j < room.getWidth(); j++) {
-                    objectGrid[i][j].push(room);
-                }
-            }
-
-            for (Item item : items){
-                objectGrid[item.getPosX() + room.getPosX()][item.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(item);
-            }
-
-            for (Creature monster : monsters){
-                objectGrid[monster.getPosX() + room.getPosX()][monster.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(monster);
-            }
-
+            
             objectGrid[player.getPosX() + room.getPosX()][player.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(player);
-     
+            
+            for (Item item : items) {
+                objectGrid[item.getPosX() + room.getPosX()][item.getPosY() + this.dungeon.getTopHeight()
+                        + room.getPosY()].push(item);
+            }
+
+            for (Creature monster : monsters) {
+                objectGrid[monster.getPosX() + room.getPosX()][monster.getPosY() + this.dungeon.getTopHeight()
+                        + room.getPosY()].push(monster);
+            }
+
+            for (int i = this.dungeon.getTopHeight() + room.getPosY(); i < room.getHeight() + this.dungeon.getTopHeight(); i++) {
+                for (int j = room.getPosX(); j < room.getWidth(); j++) {
+                    System.out.println("i: " + i + ",  j: " + j);
+                    objectGrid[j][i].push(room);
+                }
+            }     
         }
 
-        // for (int i = 0; i < WIDTH; i++) {
-        //     for (int j = 0; j < HEIGHT; j++) {
-        //         if (objectGrid[i][j].size() != 0) {
-        //             System.out.println("Stack: " + objectGrid[i][j].toString());
-        //         }
-        //     }
-        // }
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                if (objectGrid[i][j].size() != 0) {
+                    System.out.println("Stack " + i + ", " + j + ": " + objectGrid[i][j].toString());
+                }
+            }
+        }
+
+        displayGrid.initializeDisplay();
 
         //displayGrid.fireUp();
         for (int i = 0; i < WIDTH; i += 1) {
             for (int j = 0; j < HEIGHT; j += 1) {
                 int k = objectGrid[i][j].size();
-                if(k == 1){
+                if (k > 0) {
+                    // System.out.println(objectGrid[i][j].toString());
+                }
+                if(k == 1) {
                     displayGrid.addObjectToDisplay(new Char ((char)getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j)), i, j);
                 }
                 else if (k > 1){
                     Displayable disp = (Displayable) objectGrid[i][j].pop();
                     if(disp.getClass() == Room.class){
-                        displayGrid.addObjectToDisplay(new Char ('+'), i, j);
+                        Displayable disp2 = (Displayable) objectGrid[i][j].pop();
+                        if (disp2.getClass() == Passage.class) {
+                            displayGrid.addObjectToDisplay(new Char ('+'), i, j);
+                        }
+                        else {
+                            displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar(disp2, i, j))), i, j);
+                        }
                     }
                     else{
                         displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
@@ -123,23 +137,28 @@ public class Rogue implements Runnable {
     }
 
     public char getDisplayChar(Displayable disp, int x, int y){
-        if(disp.getClass() == Creature.class){
+        if (disp.getClass() == Player.class) {
+            return ((char) '@');
+        }
+        if(disp.getClass().getSuperclass() == Creature.class){
             return ((char)disp.getType());
         }
-        if(disp.getClass() == Item.class){
+        if(disp.getClass().getSuperclass() == Item.class){
             return ((char)disp.getType());
         }
         else if(disp.getClass() == Room.class){
-            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight()){
-                return ((char) 'X');
+            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() - 1 || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight() - 1) {
+                return ((char) 'X');                
             }
-            else{
+            else {
                 return ((char) '.');
             }
         }
         else if(disp.getClass() == Passage.class){
+            // System.out.println("### DEBUG ###");
             return ((char) '#');
         }
+        System.out.println(disp.getClass().getSuperclass());
         return ' ';
     }
 

@@ -2,18 +2,20 @@ package game;
 
 public class Displayable {
 
-    protected int maxhit, hpMoves, Hp, v, x, y, w, h;
+    protected int maxhit, hpMoves, Hp, v, x, y, w, h, visibility;
     protected char t;
 
     public Displayable(){
         System.out.println("Displayable: constructor, " + this);
     }
 
-    public void setInvisible(){
+    public void setInvisible() {
+        this.visibility = 0;
         System.out.println("Displayable: setInvisible");
     }
 
-    public void setVisible(){
+    public void setVisible() {
+        this.visibility = 1;
         System.out.println("Displayable: setVisible");
     }
 
@@ -74,7 +76,7 @@ public class Displayable {
         return this.Hp;
     }
 
-    public int getType(){
+    public char getType(){
        return this.t;
     }
 
@@ -96,5 +98,8 @@ public class Displayable {
 
     public int getHeight(){
         return this.h;
+    }
+    public int getVisibility() {
+        return this.visibility;
     }
 }

@@ -7,9 +7,10 @@ public class Dungeon {
     protected int width, gameHeight, topHeight, bottomHeight;
     protected String name;
     protected Creature creature;
-    protected ArrayList<Passage> passage = new ArrayList<Passage>();
+    protected ArrayList<Passage> passages;
     protected Item item;
-    public ArrayList<Room> rooms = new ArrayList<Room>();
+    protected ArrayList<Room> rooms;
+    protected Structure playersLoc;
 
     public Dungeon(String name, int width, int gameHeight, int topHeight, int bottomHeight) {
         this.name = name;
@@ -17,6 +18,9 @@ public class Dungeon {
         this.gameHeight = gameHeight;
         this.topHeight = topHeight;
         this.bottomHeight = bottomHeight;
+        this.rooms = new ArrayList<Room>();
+        this.passages = new ArrayList<Passage>();
+        this.playersLoc = new Structure(null);
 
         System.out.println("Dungeon: getDungeon: name: " + name + ", width: " + width + ", gameHeight: " + gameHeight + ", topHeight: "+ topHeight + ", bottomHeight: "+bottomHeight+", " + this);
     }
@@ -32,7 +36,7 @@ public class Dungeon {
     }
 
     public void addPassage(Passage passage){
-        this.passage.add(passage);
+        this.passages.add(passage);
         System.out.println("Dungeon: addPassage: " + passage);
     }
 
@@ -41,12 +45,16 @@ public class Dungeon {
         System.out.println("Dungeon: addItem: " + item);
     }
 
+    public void setPlayerLoc(Structure structure) {
+        this.playersLoc = structure;
+    }
+
     public ArrayList<Room> getRooms() {
         return this.rooms;
     }
 
     public ArrayList<Passage> getPassages() {
-        return this.passage;
+        return this.passages;
     }
 
     public int getWidth() {
@@ -63,5 +71,9 @@ public class Dungeon {
     
     public int getBottomHeight() {
         return this.bottomHeight;
+    }
+    
+    public Structure getPlayerLoc() {
+        return this.playersLoc;
     }
 }

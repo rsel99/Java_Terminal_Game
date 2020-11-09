@@ -63,12 +63,12 @@ public class RogueXMLHandler extends DefaultHandler {
         } 
 
         else if (qName.equalsIgnoreCase("Room")) {
-            Room room = new Room(attributes.getValue("room"));
+            Room room = new Room(Integer.parseInt(attributes.getValue("room")));
             disps.push(room);
             this.room = true;
         }
-        else if (qName.equalsIgnoreCase("passage")) {
-            Passage passage = new Passage();
+        else if (qName.equalsIgnoreCase("Passage")) {
+            Passage passage = new Passage(null);
             passage.setID(Integer.parseInt(attributes.getValue("room1")), 
                           Integer.parseInt(attributes.getValue("room2")));
             disps.push(passage);
@@ -140,7 +140,6 @@ public class RogueXMLHandler extends DefaultHandler {
             this.monster = true;
         }
 
-        // TODO: Needs work, not sure where to store it
         else if (qName.equalsIgnoreCase("ItemAction")) {
             //ItemAction itemaction = new ItemAction(attributes.getValue("name"), attributes.getValue("type"));
             String name = attributes.getValue("name");
@@ -220,7 +219,7 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (qName.equalsIgnoreCase("actionCharValue")) {
             this.actionCharValue = true;
         }
-        
+        // System.out.println(disps);
         data = new StringBuilder();
     }
 
@@ -370,7 +369,15 @@ public class RogueXMLHandler extends DefaultHandler {
             Player player = (Player) disps.pop();
             Room room = (Room) disps.pop();
             room.setPlayer(player);
-            // disps.push(player);
+            System.out.println("### DEBUG ###");
+            System.out.println("### DEBUG ###");
+            System.out.println("### DEBUG ###");
+            System.out.println(((Structure)room).getPlayer());
+            System.out.println(player);
+            System.out.println("### DEBUG ###");
+            System.out.println("### DEBUG ###");
+            System.out.println("### DEBUG ###");
+            this.dungeon.setPlayerLoc((Structure)room);
             disps.push(room);
             this.player = false;
         }
@@ -391,6 +398,9 @@ public class RogueXMLHandler extends DefaultHandler {
             dungeon.addPassage(passage);
             this.passage = false;
         }
+        // System.out.println("## DEBUG ##");
+        // System.out.println(disps.toString());
+        // System.out.println("## DEBUG ##");
     }
 
     @Override

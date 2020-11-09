@@ -1,4 +1,5 @@
 package game;
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Passage extends Structure {
@@ -8,7 +9,10 @@ public class Passage extends Structure {
     protected Queue<Integer> X;
     protected Queue<Integer> Y;
 
-    public Passage(){
+    public Passage (Player player){
+        super(player);
+        X = new LinkedList<Integer>();
+        Y = new LinkedList<Integer>();
         System.out.println("Passage: constructor, " + this);
     }
 
@@ -39,5 +43,13 @@ public class Passage extends Structure {
 
     public Queue<Integer> getY(){
         return Y;
+    }
+
+    public int getRoom1() {
+        return this.room1;
+    }
+
+    public int getRoom2() {
+        return this.room2;
     }
 }

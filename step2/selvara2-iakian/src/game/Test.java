@@ -50,7 +50,7 @@ public class Test{
             // print out all of the students.  This will change depending on 
             // what kind of XML we are parsing
                 // for (Dungeon dungeon : dungeons) {
-                System.out.println(dungeon);
+                // System.out.println(dungeon);
                 // }
                 /*
                  * the above is a different form of 

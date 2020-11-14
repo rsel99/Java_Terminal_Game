@@ -98,9 +98,9 @@ public class Rogue implements Runnable {
             for (int j = 0; j < HEIGHT; j += 1) {
                 int k = objectGrid[i][j].size();
                 if(k == 1) {
-                    displayGrid.addObjectToDisplay(new Char ((char)getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j)), i, j);
+                    displayGrid.addObjectToDisplay(new Char (getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j)), i, j);
                 }
-                else if (k > 1){
+                else if (k > 1) {
                     Displayable disp = (Displayable) objectGrid[i][j].pop();
                     if(disp.getClass() == Room.class){
                         Displayable disp2 = (Displayable) objectGrid[i][j].pop();
@@ -108,11 +108,11 @@ public class Rogue implements Runnable {
                             displayGrid.addObjectToDisplay(new Char ('+'), i, j);
                         }
                         else {
-                            displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar(disp2, i, j))), i, j);
+                            displayGrid.addObjectToDisplay(new Char ((getDisplayChar(disp2, i, j))), i, j);
                         }
                     }
-                    else{
-                        displayGrid.addObjectToDisplay(new Char ((char)(getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
+                    else {
+                        displayGrid.addObjectToDisplay(new Char ((getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
                     }
                 }
             }
@@ -127,7 +127,7 @@ public class Rogue implements Runnable {
 
     public char getDisplayChar(Displayable disp, int x, int y){
         if (disp.getClass() == Player.class) {
-            return ((char) '@');
+            return '@';
         }
         if(disp.getClass().getSuperclass() == Creature.class){
             return ((char)disp.getType());
@@ -137,15 +137,17 @@ public class Rogue implements Runnable {
         }
         else if(disp.getClass() == Room.class) {
             if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() - 1 || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight() - 1) {
-                return ((char) 'X');                
+                System.out.println("x: " + x + ", y:" + y);                
+                return 'X';
             }
             else {
-                return ((char) '.');
+                return '.';
             }
         }
         else if(disp.getClass() == Passage.class){
-            return ((char) '#');
+            return '#';
         }
+        System.out.println("BAD");
         return ' ';
     }
 

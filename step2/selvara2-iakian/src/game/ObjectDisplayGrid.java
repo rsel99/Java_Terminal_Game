@@ -100,6 +100,8 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 writeToTerminal(x, y);
             }
         }
+        System.out.println((0 <= x) && (x < objectGrid.length));
+        System.out.println((0 <= y) && (y < objectGrid[0].length));
     }
 
     private void writeToTerminal(int x, int y) {

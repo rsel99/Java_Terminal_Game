@@ -369,14 +369,6 @@ public class RogueXMLHandler extends DefaultHandler {
             Player player = (Player) disps.pop();
             Room room = (Room) disps.pop();
             room.setPlayer(player);
-            System.out.println("### DEBUG ###");
-            System.out.println("### DEBUG ###");
-            System.out.println("### DEBUG ###");
-            System.out.println(((Structure)room).getPlayer());
-            System.out.println(player);
-            System.out.println("### DEBUG ###");
-            System.out.println("### DEBUG ###");
-            System.out.println("### DEBUG ###");
             this.dungeon.setPlayerLoc((Structure)room);
             disps.push(room);
             this.player = false;

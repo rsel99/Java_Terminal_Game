@@ -1,4 +1,4 @@
-
+package game;
 import asciiPanel.AsciiPanel;
 import javax.swing.*;
 import java.awt.event.*;
@@ -11,20 +11,16 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static final String CLASSID = ".ObjectDisplayGrid";
 
     private static AsciiPanel terminal;
-    private Stack<Displayable>[][] objectGrid = null;
+    private Char[][] objectGrid = null;
 
     private List<InputObserver> inputObservers = null;
 
     private static int height;
     private static int width;
-    private Dungeon dungeon;
 
-
-    public ObjectDisplayGrid(int _width, int _height, Dungeon dungeon) {
+    public ObjectDisplayGrid(int _width, int _height) {
         width = _width;
         height = _height;
-        this.dungeon = dungeon; 
-
         terminal = new AsciiPanel(width, height);
 
         objectGrid = new Char[width][height];
@@ -80,9 +76,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     }
 
     public final void initializeDisplay() {
-        Char ch = new Char('.');
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        Char ch = new Char(' ');
+        for (int i = 0; i <= width; i++) {
+            for (int j = 0; j <= height; j++) {
                 addObjectToDisplay(ch, i, j);
             }
         }
@@ -110,5 +106,10 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         char ch = objectGrid[x][y].getChar();
         terminal.write(ch, x, y);
         terminal.repaint();
+    }
+
+    public Char[][] getObjectGrid() {
+        Char[][] tmpGrid = this.objectGrid;
+        return tmpGrid;
     }
 }

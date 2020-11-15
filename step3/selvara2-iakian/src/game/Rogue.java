@@ -7,6 +7,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
 import java.lang.Math;
 import java.time.*;
+import java.util.LinkedList;
 
 public class Rogue implements Runnable {
     private static final int DEBUG = 0;
@@ -42,8 +43,21 @@ public class Rogue implements Runnable {
         ArrayList<Passage> passages = this.dungeon.getPassages();
         
         for (Passage passage : passages) {
-            Queue<Integer> X = passage.getX();
-            Queue<Integer> Y = passage.getY();
+            LinkedList<Integer> X = new LinkedList<Integer>();
+            LinkedList<Integer> Y = new LinkedList<Integer>();
+            X = passage.getX();
+            Y = passage.getY();
+
+            Door door1 = new Door();
+            Door door2 = new Door();
+
+            door1.setPosX(X.getFirst());
+            door1.setPosY(Y.getFirst());
+            door2.setPosX(X.getLast());
+            door2.setPosY(Y.getLast());
+
+            passage.setDoor1(door1);
+            passage.setDoor2(door2);
 
             int x = X.poll();
             int y = Y.poll();

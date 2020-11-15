@@ -74,15 +74,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
     private Monster monsterNext(Player player, Room loc, char dir) {
         ArrayList<Monster> monsters = loc.getMonsters();
 
-        System.out.println("Monsters: " + monsters);
-
         for (Monster monster : monsters) {
-            if (loc.getRoomNum() == 2) {
-                System.out.println("player posx" + player.getPosX());
-                System.out.println("player posy" + player.getPosY());
-                System.out.println("monster posx" + monster.getPosX());
-                System.out.println("monster posy" + monster.getPosX());
-            }
             switch (dir) {
                 case 'h':
                     if (monster.getPosX() == player.getPosX() - 1 && monster.getPosY() == player.getPosY()) {
@@ -144,10 +136,18 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Monster monster = monsterNext(player, room, ch);
                                 if ((objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
-                                                                room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosX(player.getPosX() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());        
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
+                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosX(player.getPosX() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '+') {
                                     // Change location and structure type
@@ -157,19 +157,21 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '#') ||
+                                                    objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
+                                    
 
                                     ArrayList<Passage> passages = dungeon.getPassages();
                                     Passage targPass = null;
                                     for (Passage passage : passages) {
-                                        if (passage.getRoom2() == room.getRoomNum()) {
+                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
+                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
                                             targPass = passage;
                                             break;
                                         }
                                     }
-
+                                    player.setPosX(player.getPosX() - 1);
                                     player.setPosX(room.getPosX() + player.getPosX());
                                     player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
@@ -180,7 +182,6 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     loc = targPass;
                                 }
                                 else if (monster != null) {
-                                    System.out.println(monster);
                                     processMonsterHit(player, monster);
                                     processMonsterHit(monster, player);
                                     updateMessageDisp(player);
@@ -188,15 +189,26 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         System.exit(0);
                                     }
                                 }
-                                System.out.println(monster);
                             }
                             catch(Exception e) {
                                 Passage passage = (Passage) loc;
                                 if ((objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '#' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[player.getPosX() - 1][player.getPosY()], player.getPosX(), + player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), 
+                                                                       player.getPosX(), 
+                                                                       player.getPosY());
+                                        player.setPosX(player.getPosX() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
+                                                                       player.getPosX(),
+                                                                       player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX() - 1][player.getPosY()], player.getPosX(), + player.getPosY());
+                                        player.setPosX(player.getPosX() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '+') {
                                     // Change location and structure type
@@ -206,19 +218,22 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '#') ||
+                                                    objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
-                                        if (passage.getRoom1() == room.getRoomNum()) {
+                                        if (player.getPosX() == room.getPosX() + room.getWidth() - 1 &&
+                                            player.getPosY() < room.getPosY() + room.getHeight() + 1 &&
+                                            player.getPosY() > room.getPosY()) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
 
+                                    player.setPosX(player.getPosX() - 1);
                                     player.setPosX(player.getPosX() - targRoom.getPosX());
                                     player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
@@ -228,7 +243,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     dungeon.setPlayerLoc(targRoom);
                                     loc = targRoom;
                                 }
-                                else if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == ' ')) {
+                                else if ((objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == 'X') || (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == ' ')) {
                                     System.out.println("Out of Bounds");
                                 }
                                 else {
@@ -243,10 +258,22 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Monster monster = monsterNext(player, room, ch);
                                 if ((objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '.' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1], 
-                                                                room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), 
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosY(player.getPosY() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1], 
+                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosY(player.getPosY() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '+') {
                                     // Change location and structure type
@@ -256,19 +283,26 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '#') ||
+                                                    objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
 
                                     ArrayList<Passage> passages = dungeon.getPassages();
                                     Passage targPass = null;
                                     for (Passage passage : passages) {
-                                        if (passage.getRoom1() == room.getRoomNum()) {
+                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
+                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
+                                            targPass = passage;
+                                            break;
+                                        }
+                                        else if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
+                                                 passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
                                             targPass = passage;
                                             break;
                                         }
                                     }
 
+                                    player.setPosY(player.getPosY() + 1);
                                     player.setPosX(room.getPosX() + player.getPosX());
                                     player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
@@ -291,9 +325,21 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Passage passage = (Passage) loc;
                                 if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '#')) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() + 1], player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), 
+                                                                       player.getPosX(),
+                                                                       player.getPosY());
+                                        player.setPosY(player.getPosY() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
+                                                                       player.getPosX(),
+                                                                       player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() + 1], player.getPosX(), player.getPosY());
+                                        player.setPosY(player.getPosY() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '+') {
                                     // Change location and structure type
@@ -303,23 +349,32 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '#') ||
+                                                    objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
+                                    System.out.println("player x: " + player.getPosX());
+                                    System.out.println("player y: " + player.getPosY());
                                     for (Room room : rooms) {
-                                        if (passage.getRoom2() == room.getRoomNum()) {
+                                        System.out.println("room: " + room.getRoomNum());
+                                        System.out.println(room.getPosX());
+                                        System.out.println(room.getPosX() + room.getWidth());
+                                        System.out.println(room.getPosY());
+                                        if (player.getPosX() > room.getPosX() && 
+                                            player.getPosX() < room.getPosX() + room.getWidth() &&
+                                            player.getPosY() == room.getPosY() + dungeon.getTopHeight()) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
 
+                                    player.setPosY(player.getPosY() + 1);
                                     player.setPosX(player.getPosX() - targRoom.getPosX());
                                     player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
-
+                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), 
+                                                                   player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
                                     player.setOnDoor(false);
                                     targRoom.setPlayer(player);
                                     dungeon.setPlayerLoc(targRoom);
@@ -340,10 +395,22 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Monster monster = monsterNext(player, room, ch);
                                 if ((objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '.' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1], 
-                                                                room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), 
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosY(player.getPosY() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1], 
+                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosY(player.getPosY() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '+') {
                                     // Change location and structure type
@@ -353,19 +420,27 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '#') ||
+                                                    objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
+                                    
 
                                     ArrayList<Passage> passages = dungeon.getPassages();
                                     Passage targPass = null;
                                     for (Passage passage : passages) {
-                                        if (passage.getRoom2() == room.getRoomNum()) {
+                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
+                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
+                                            targPass = passage;
+                                            break;
+                                        }
+                                        else if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
+                                                 passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
                                             targPass = passage;
                                             break;
                                         }
                                     }
 
+                                    player.setPosY(player.getPosY() - 1);
                                     player.setPosX(room.getPosX() + player.getPosX());
                                     player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
@@ -388,9 +463,19 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Passage passage = (Passage) loc;
                                 if ((objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '#')) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() - 1], player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(),
+                                                player.getPosY());
+                                        player.setPosY(player.getPosY() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(),
+                                                player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() - 1], player.getPosX(), player.getPosY());
+                                        player.setPosY(player.getPosY() - 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '+') {
                                     // Change location and structure type
@@ -400,29 +485,38 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '#') ||
+                                                    objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
+                                    System.out.println("player x: " + player.getPosX());
+                                    System.out.println("player y; " + player.getPosY());
                                     for (Room room : rooms) {
-                                        if (passage.getRoom1() == room.getRoomNum()) {
+                                        System.out.println(room.getPosX());
+                                        System.out.println(room.getPosX() + room.getWidth());
+                                        System.out.println(room.getPosY() + room.getHeight() + 1);
+                                        if (player.getPosX() > room.getPosX() && 
+                                            player.getPosX() < room.getPosX() + room.getWidth() &&
+                                            player.getPosY() == room.getPosY() + room.getHeight() + 1) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
-
+                                    player.setPosY(player.getPosY() - 1);
                                     player.setPosX(player.getPosX() - targRoom.getPosX());
                                     player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
+                                    displayGrid.addObjectToDisplay(new Char(player.getType()), 
+                                                                   player.getPosX() + targRoom.getPosX(), 
+                                                                   player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
 
                                     player.setOnDoor(false);
                                     targRoom.setPlayer(player);
                                     dungeon.setPlayerLoc(targRoom);
                                     loc = targRoom;
                                 }
-                                else if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == ' ')) {
+                                else if ((objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == ' ')) {
                                     System.out.println("Out of Bounds");
                                 }
                                 else {
@@ -437,10 +531,22 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Monster monster = monsterNext(player, room, ch);
                                 if ((objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
-                                                                room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), 
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosX(player.getPosX() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
+                                                                       room.getPosX() + player.getPosX(),
+                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
+                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosX(player.getPosX() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '+') {
                                     // Change location and structure type
@@ -450,19 +556,26 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '#') ||
+                                                    objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
 
                                     ArrayList<Passage> passages = dungeon.getPassages();
                                     Passage targPass = null;
                                     for (Passage passage : passages) {
-                                        if (passage.getRoom1() == room.getRoomNum()) {
+                                        if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
+                                            passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
+                                            targPass = passage;
+                                            break;
+                                        }
+                                        else if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
+                                                 passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
                                             targPass = passage;
                                             break;
                                         }
                                     }
 
+                                    player.setPosX(player.getPosX() + 1);
                                     player.setPosX(room.getPosX() + player.getPosX());
                                     player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
@@ -485,9 +598,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 Passage passage = (Passage) loc;
                                 if ((objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '#' )) {
                                     // Change location
-                                    displayGrid.addObjectToDisplay(objectGrid[player.getPosX() + 1][player.getPosY()], player.getPosX(), + player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    if (onDoor) {
+                                        displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
+                                        player.setPosX(player.getPosX() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                        player.setOnDoor(false);
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX() + 1][player.getPosY()], player.getPosX(), + player.getPosY());
+                                        player.setPosX(player.getPosX() + 1);
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
+                                    }
                                 }
                                 else if (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '+') {
                                     // Change location and structure type
@@ -497,19 +618,21 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     player.setOnDoor(true);
                                 }
-                                else if (onDoor) {
+                                else if (onDoor && (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '#') ||
+                                                    objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '.') {
                                     displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
-                                        if (passage.getRoom2() == room.getRoomNum()) {
+                                        if (player.getPosX() == room.getPosX() &&
+                                            player.getPosY() < room.getPosY() + room.getHeight() + dungeon.getTopHeight() &&
+                                            player.getPosY() > room.getPosY() + dungeon.getTopHeight()) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
-
+                                    player.setPosX(player.getPosX() + 1);
                                     player.setPosX(player.getPosX() - targRoom.getPosX());
                                     player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
                                     displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
@@ -519,7 +642,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     dungeon.setPlayerLoc(targRoom);
                                     loc = targRoom;
                                 }
-                                else if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == ' ')) {
+                                else if ((objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == 'X') || 
+                                         (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == ' ')) {
                                     System.out.println("Out of Bounds");
                                 }
                                 else {

@@ -6,8 +6,10 @@ public class Passage extends Structure {
 
     protected String name;
     protected int room1, room2;
-    protected Queue<Integer> X;
-    protected Queue<Integer> Y;
+    protected LinkedList<Integer> X;
+    protected LinkedList<Integer> Y;
+    protected Door door1;
+    protected Door door2;
 
     public Passage (Player player){
         super(player);
@@ -27,6 +29,14 @@ public class Passage extends Structure {
         System.out.println("Passage: setID: room1: " + room1 + ", room2: " + room2);
     }
 
+    public void setDoor1(Door door) {
+        this.door1 = door;
+    }
+
+    public void setDoor2(Door door) {
+        this.door2 = door;
+    }
+
     @Override
     public void setPosX(int x){
         X.add(x);
@@ -37,11 +47,11 @@ public class Passage extends Structure {
         Y.add(y);
     }
 
-    public Queue<Integer> getX(){
+    public LinkedList<Integer> getX(){
         return X;
     }
 
-    public Queue<Integer> getY(){
+    public LinkedList<Integer> getY(){
         return Y;
     }
 
@@ -51,5 +61,13 @@ public class Passage extends Structure {
 
     public int getRoom2() {
         return this.room2;
+    }
+
+    public Door getDoor1() {
+        return this.door1;
+    }
+
+    public Door getDoor2() {
+        return this.door2;
     }
 }

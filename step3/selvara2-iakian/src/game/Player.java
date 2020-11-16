@@ -9,7 +9,7 @@ public class Player extends Creature {
     protected int score = 0;
 
     public Player(String name, int room, int serial){
-        this.name = name;
+        super(name);
         this.room = room;
         this.serial = serial;
         this.setType('@');
@@ -32,10 +32,6 @@ public class Player extends Creature {
 
     public void setScore(int score) {
         this.score = score;
-    }
-
-    public String getName() {
-        return this.name;
     }
 
     public int getRoom() {

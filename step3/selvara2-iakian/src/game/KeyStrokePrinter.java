@@ -37,7 +37,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         }
     }
 
-    private void updateMessageDisp(Player player) {
+    private void updatePlayerDisp(Player player) {
         int playerHp = player.getHp();
         int playerScore = player.getScore();
         int temp = playerHp;
@@ -59,15 +59,33 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         }
     }
 
+    private void updateInfo(String info) {
+        if (dungeon.getInfo().length() > 0) {
+            for (int i = ("Info: ").length() - 1 ; i < 1 + dungeon.getWidth(); i++) {
+                displayGrid.addObjectToDisplay(new Char(' '), i, this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+            }
+        }
+        dungeon.setInfo(info);
+        for (int i = 0 ; i < dungeon.getInfo().length(); i++) {
+            displayGrid.addObjectToDisplay(new Char(dungeon.getInfo().charAt(i)), i + ("Info: ").length(), 
+                                           this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+        }
+    }
+
     private void processMonsterHit(Creature attacker, Creature defender) {
         Random random = new Random();
         int damage = random.nextInt(attacker.getMaxHit() + 1);
-        if (defender.getHp() - damage > 0) {
-            defender.setHp(defender.getHp() - damage);
+        if (attacker.getHp() == 0) {
+            updateInfo(String.format("%s died", attacker.getName()));
         }
-        else {
+        else if (defender.getHp() - damage <= 0) {
             defender.setHp(0);
             defender.setMaxHit(0);
+            updateInfo(String.format("%s died", defender.getName()));
+        }
+        else if (defender.getHp() - damage > 0) {
+            defender.setHp(defender.getHp() - damage);
+            updateInfo(String.format("%s --> %s: -%d hp for %s", attacker.getName(), defender.getName(), damage, defender.getName()));
         }
     }
 
@@ -127,8 +145,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     boolean onDoor = player.getOnDoor();
                     Char[][] objectGrid = displayGrid.getObjectGrid();
                     
-                    updateMessageDisp(player);
-
+                    updatePlayerDisp(player);
                     switch (ch) {
                         case 'h':
                             try {
@@ -143,8 +160,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setOnDoor(false);
                                     }
                                     else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
-                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         player.setPosX(player.getPosX() - 1);
                                         displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     }
@@ -183,8 +199,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 else if (monster != null) {
                                     processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
                                     processMonsterHit(monster, player);
-                                    updateMessageDisp(player);
+                                    updatePlayerDisp(player);
                                     if (player.getHp() == 0) {
                                         System.exit(0);
                                     }
@@ -314,8 +331,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 else if (monster != null) {
                                     processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
                                     processMonsterHit(monster, player);
-                                    updateMessageDisp(player);
+                                    updatePlayerDisp(player);
                                     if (player.getHp() == 0) {
                                         System.exit(0);
                                     }
@@ -355,13 +373,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
-                                    System.out.println("player x: " + player.getPosX());
-                                    System.out.println("player y: " + player.getPosY());
                                     for (Room room : rooms) {
-                                        System.out.println("room: " + room.getRoomNum());
-                                        System.out.println(room.getPosX());
-                                        System.out.println(room.getPosX() + room.getWidth());
-                                        System.out.println(room.getPosY());
                                         if (player.getPosX() > room.getPosX() && 
                                             player.getPosX() < room.getPosX() + room.getWidth() &&
                                             player.getPosY() == room.getPosY() + dungeon.getTopHeight()) {
@@ -406,8 +418,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setOnDoor(false);
                                     }
                                     else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1], 
-                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1], room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         player.setPosY(player.getPosY() - 1);
                                         displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     }
@@ -452,8 +463,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 else if (monster != null) {
                                     processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
                                     processMonsterHit(monster, player);
-                                    updateMessageDisp(player);
+                                    updatePlayerDisp(player);
                                     if (player.getHp() == 0) {
                                         System.exit(0);
                                     }
@@ -491,12 +503,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
-                                    System.out.println("player x: " + player.getPosX());
-                                    System.out.println("player y; " + player.getPosY());
+
                                     for (Room room : rooms) {
-                                        System.out.println(room.getPosX());
-                                        System.out.println(room.getPosX() + room.getWidth());
-                                        System.out.println(room.getPosY() + room.getHeight() + 1);
                                         if (player.getPosX() > room.getPosX() && 
                                             player.getPosX() < room.getPosX() + room.getWidth() &&
                                             player.getPosY() == room.getPosY() + room.getHeight() + 1) {
@@ -587,8 +595,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 else if (monster != null) {
                                     processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
                                     processMonsterHit(monster, player);
-                                    updateMessageDisp(player);
+                                    updatePlayerDisp(player);
                                     if (player.getHp() == 0) {
                                         System.exit(0);
                                     }

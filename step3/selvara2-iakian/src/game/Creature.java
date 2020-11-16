@@ -3,9 +3,11 @@ package game;
 public class Creature extends Displayable {
 
     protected int h, hpm;
+    protected String name;
     protected CreatureAction da, ha;
 
-    public Creature(){
+    public Creature(String name) {
+        this.name = name;
         System.out.println("Creature: constructor, " + this);
     }
 
@@ -28,5 +30,9 @@ public class Creature extends Displayable {
         //(type CreatureAction???)
         this.ha = ha;
         System.out.println("Creature: setHitAction to " + ha);
+    }
+    
+    public String getName() {
+        return this.name;
     }
 }

@@ -11,6 +11,7 @@ public class Dungeon {
     protected Item item;
     protected ArrayList<Room> rooms;
     protected Structure playersLoc;
+    protected String info;
 
     public Dungeon(String name, int width, int gameHeight, int topHeight, int bottomHeight) {
         this.name = name;
@@ -21,6 +22,7 @@ public class Dungeon {
         this.rooms = new ArrayList<Room>();
         this.passages = new ArrayList<Passage>();
         this.playersLoc = new Structure(null);
+        this.info = "";
 
         System.out.println("Dungeon: getDungeon: name: " + name + ", width: " + width + ", gameHeight: " + gameHeight + ", topHeight: "+ topHeight + ", bottomHeight: "+bottomHeight+", " + this);
     }
@@ -49,6 +51,10 @@ public class Dungeon {
         this.playersLoc = structure;
     }
 
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     public ArrayList<Room> getRooms() {
         return this.rooms;
     }
@@ -75,5 +81,9 @@ public class Dungeon {
     
     public Structure getPlayerLoc() {
         return this.playersLoc;
+    }
+
+    public String getInfo() {
+        return this.info;
     }
 }

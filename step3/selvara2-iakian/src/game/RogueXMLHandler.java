@@ -251,6 +251,16 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (hp) {
             Displayable disp = disps.pop();
             disp.setHp(Integer.parseInt(data.toString()));
+            if (monster) {
+                System.out.println("### DEBUG ###");
+                System.out.println("### DEBUG ###");
+                System.out.println("### DEBUG ###");
+                System.out.println(disp);
+                System.out.println(disp.getHp());
+                System.out.println("### DEBUG ###");
+                System.out.println("### DEBUG ###");
+                System.out.println("### DEBUG ###");
+            }
             disps.push(disp);
             hp = false;
         }
@@ -351,13 +361,13 @@ public class RogueXMLHandler extends DefaultHandler {
             this.sword = false;
         }
         else if (armor) {
-            if(player){
+            if(player) {
                 Armor armor = (Armor) disps.pop();
                 Player player = (Player) disps.pop();
                 player.setArmor(armor);
                 disps.push(player);
             }
-            else{
+            else {
                 Armor armor = (Armor) disps.pop();
                 Room room = (Room) disps.pop();
                 room.addItem(armor);
@@ -376,7 +386,7 @@ public class RogueXMLHandler extends DefaultHandler {
         else if (monster) {
             Monster monster = (Monster) disps.pop();
             Room room = (Room) disps.pop();
-            room.addCreature(monster);
+            room.addMonster((Monster) monster);
             disps.push(room);
             this.monster = false;
         }

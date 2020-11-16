@@ -422,6 +422,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             break;
                         case 'e':
+                            System.exit(0);
                             break;
                         default:
                             break;

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LinkedList;
+import java.io.File;
 
 public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubject {
 
@@ -18,17 +20,19 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static int height;
     private static int width;
 
+    private LinkedList<String> info;
+
     public ObjectDisplayGrid(int _width, int _height) {
         width = _width;
         height = _height;
         terminal = new AsciiPanel(width, height);
 
         objectGrid = new Char[width][height];
-
+        info = new LinkedList<String>();
         initializeDisplay();
 
         super.add(terminal);
-        super.setSize(width * 9, height * 16);
+        super.setSize(width * 9, height * 17);
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // super.repaint();
         // terminal.repaint( );
@@ -100,8 +104,6 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                 writeToTerminal(x, y);
             }
         }
-        System.out.println((0 <= x) && (x < objectGrid.length));
-        System.out.println((0 <= y) && (y < objectGrid[0].length));
     }
 
     private void writeToTerminal(int x, int y) {

@@ -1,4 +1,4 @@
-package game;        // we should figure out the package stuff after, for now I'm compiling locally and it works
+package game;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -7,6 +7,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
 import java.lang.Math;
 import java.time.*;
+import java.util.LinkedList;
 
 public class Rogue implements Runnable {
     private static final int DEBUG = 0;
@@ -42,8 +43,21 @@ public class Rogue implements Runnable {
         ArrayList<Passage> passages = this.dungeon.getPassages();
         
         for (Passage passage : passages) {
-            Queue<Integer> X = passage.getX();
-            Queue<Integer> Y = passage.getY();
+            LinkedList<Integer> X = new LinkedList<Integer>();
+            LinkedList<Integer> Y = new LinkedList<Integer>();
+            X = passage.getX();
+            Y = passage.getY();
+
+            Door door1 = new Door();
+            Door door2 = new Door();
+
+            door1.setPosX(X.getFirst());
+            door1.setPosY(Y.getFirst());
+            door2.setPosX(X.getLast());
+            door2.setPosY(Y.getLast());
+
+            passage.setDoor1(door1);
+            passage.setDoor2(door2);
 
             int x = X.poll();
             int y = Y.poll();
@@ -68,7 +82,7 @@ public class Rogue implements Runnable {
         }
 
         for (Room room : rooms) {
-            ArrayList<Creature> monsters = room.getMonsters();
+            ArrayList<Monster> monsters = room.getMonsters();
             ArrayList<Item> items = room.getItems();
             Creature player = room.getPlayer();
 
@@ -80,7 +94,10 @@ public class Rogue implements Runnable {
                 objectGrid[item.getPosX() + room.getPosX()][item.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(item);
             }
 
-            for (Creature monster : monsters) {
+            for (Monster monster : monsters) {
+                if (room.getRoomNum() == 2) {
+                    System.out.println("monsters: " + monster);
+                }
                 objectGrid[monster.getPosX() + room.getPosX()][monster.getPosY() + this.dungeon.getTopHeight() + room.getPosY()].push(monster);
             }
 
@@ -94,6 +111,20 @@ public class Rogue implements Runnable {
         displayGrid.initializeDisplay();
 
         //displayGrid.fireUp();
+        for (int i = 0; i < ("Pack: ").length(); i++) {
+            displayGrid.addObjectToDisplay(new Char(("Pack: ").charAt(i)), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+        }
+        for (int i = 0; i < ("Info: ").length(); i++) {
+            displayGrid.addObjectToDisplay(new Char(("Info: ").charAt(i)), i, 
+                this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+        }
+        for (int i = 0; i < ("HP: ").length(); i++) {
+            displayGrid.addObjectToDisplay(new Char(("HP: ").charAt(i)), i, 0);
+        }
+        for (int i = 0; i < ("Score: ").length(); i++) {
+            displayGrid.addObjectToDisplay(new Char(("Score: ").charAt(i)), i + ("HP: ").length() + 4, 0);
+        }
+        
         for (int i = 0; i < WIDTH; i += 1) {
             for (int j = 0; j < HEIGHT; j += 1) {
                 int k = objectGrid[i][j].size();
@@ -102,7 +133,7 @@ public class Rogue implements Runnable {
                 }
                 else if (k > 1) {
                     Displayable disp = (Displayable) objectGrid[i][j].pop();
-                    if(disp.getClass() == Room.class){
+                    if(disp.getClass() == Room.class) {
                         Displayable disp2 = (Displayable) objectGrid[i][j].pop();
                         if (disp2.getClass() == Passage.class) {
                             displayGrid.addObjectToDisplay(new Char ('+'), i, j);
@@ -136,8 +167,7 @@ public class Rogue implements Runnable {
             return ((char)disp.getType());
         }
         else if(disp.getClass() == Room.class) {
-            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() - 1 || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight() - 1) {
-                System.out.println("x: " + x + ", y:" + y);                
+            if(x == disp.getPosX() || x == disp.getPosX() + disp.getWidth() - 1 || y == disp.getPosY() + this.dungeon.getTopHeight() || y == disp.getPosY() + this.dungeon.getTopHeight() + disp.getHeight() - 1) {               
                 return 'X';
             }
             else {
@@ -188,7 +218,7 @@ public class Rogue implements Runnable {
              */
             // these lines should be copied exactly.
             int width = dungeon.getWidth();
-            int height = dungeon.getGameHeight() + dungeon.getTopHeight() + dungeon.getBottomHeight() + 1;
+            int height = dungeon.getGameHeight() + dungeon.getTopHeight() + dungeon.getBottomHeight();
 
             Rogue rogue = new Rogue(width, height, dungeon);
             // Thread.sleep(10000);

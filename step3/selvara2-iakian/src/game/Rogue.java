@@ -20,6 +20,7 @@ public class Rogue implements Runnable {
     private int HEIGHT = 40;
     private Dungeon dungeon;
     private Stack[][] objectGrid;
+    private static Stack[][] characters;
 
     public Rogue(int width, int height, Dungeon dungeon) {
         this.dungeon = dungeon;
@@ -29,9 +30,11 @@ public class Rogue implements Runnable {
         displayGrid = new ObjectDisplayGrid(WIDTH, HEIGHT);
 
         objectGrid = new Stack[WIDTH][HEIGHT];
+        characters = new Stack[WIDTH][HEIGHT];
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 objectGrid[i][j] = new Stack<Displayable>();
+                characters[i][j] = new Stack<Character>();
             }
         }
     }
@@ -112,38 +115,60 @@ public class Rogue implements Runnable {
 
         //displayGrid.fireUp();
         for (int i = 0; i < ("Pack: ").length(); i++) {
-            displayGrid.addObjectToDisplay(new Char(("Pack: ").charAt(i)), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+            displayGrid.addObjectToDisplay((Character)("Pack: ").charAt(i), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
         for (int i = 0; i < ("Info: ").length(); i++) {
-            displayGrid.addObjectToDisplay(new Char(("Info: ").charAt(i)), i, 
+            displayGrid.addObjectToDisplay((Character)("Info: ").charAt(i), i, 
                 this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
         for (int i = 0; i < ("HP: ").length(); i++) {
-            displayGrid.addObjectToDisplay(new Char(("HP: ").charAt(i)), i, 0);
+            displayGrid.addObjectToDisplay((Character)("HP: ").charAt(i), i, 0);
         }
         for (int i = 0; i < ("Score: ").length(); i++) {
-            displayGrid.addObjectToDisplay(new Char(("Score: ").charAt(i)), i + ("HP: ").length() + 4, 0);
+            displayGrid.addObjectToDisplay((Character)("Score: ").charAt(i), i + ("HP: ").length() + 4, 0);
         }
+
+
         
         for (int i = 0; i < WIDTH; i += 1) {
             for (int j = 0; j < HEIGHT; j += 1) {
                 int k = objectGrid[i][j].size();
+                char temp;
                 if(k == 1) {
-                    displayGrid.addObjectToDisplay(new Char (getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j)), i, j);
+                    temp = getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j);
+                    displayGrid.addObjectToDisplay((Character) temp, i, j);
+                    characters[i][j].push((Character) temp);
+                    // System.out.println(characters[i][j].peek());
                 }
                 else if (k > 1) {
                     Displayable disp = (Displayable) objectGrid[i][j].pop();
                     if(disp.getClass() == Room.class) {
                         Displayable disp2 = (Displayable) objectGrid[i][j].pop();
                         if (disp2.getClass() == Passage.class) {
-                            displayGrid.addObjectToDisplay(new Char ('+'), i, j);
+                            displayGrid.addObjectToDisplay((Character) '+', i, j);
+                            characters[i][j].push((Character) '+');
+                            // System.out.println(characters[i][j].peek());
                         }
                         else {
-                            displayGrid.addObjectToDisplay(new Char ((getDisplayChar(disp2, i, j))), i, j);
+                            temp = getDisplayChar(disp, i, j);
+                            characters[i][j].push((Character) temp);
+                            displayGrid.addObjectToDisplay((Character) temp, i, j);
+                            temp = getDisplayChar(disp2, i, j);
+                            displayGrid.addObjectToDisplay((Character) temp, i, j);
+                            characters[i][j].push((Character) temp);
+                            // System.out.println(characters[i][j].peek());
                         }
                     }
                     else {
-                        displayGrid.addObjectToDisplay(new Char ((getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
+                        Displayable disp2 = (Displayable) objectGrid[i][j].pop();
+                        temp = getDisplayChar(disp, i, j);
+                        displayGrid.addObjectToDisplay((Character) temp, i, j);
+                        characters[i][j].push((Character) temp);
+                        temp = getDisplayChar(disp2, i, j);
+                        displayGrid.addObjectToDisplay((Character) temp, i, j);
+                        characters[i][j].push((Character) temp);
+                        // System.out.println(characters[i][j].peek());
+                        // displayGrid.addObjectToDisplay(new Char ((getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);
                     }
                 }
             }
@@ -225,7 +250,7 @@ public class Rogue implements Runnable {
             Thread testThread = new Thread(rogue);
             testThread.start();
             
-            rogue.keyStrokePrinter = new Thread(new KeyStrokePrinter(displayGrid, dungeon));
+            rogue.keyStrokePrinter = new Thread(new KeyStrokePrinter(displayGrid, dungeon, characters));
             rogue.keyStrokePrinter.start();
 
             testThread.join();

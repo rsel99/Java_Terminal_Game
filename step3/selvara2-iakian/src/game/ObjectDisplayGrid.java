@@ -2,8 +2,7 @@ package game;
 import asciiPanel.AsciiPanel;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.LinkedList;
 import java.io.File;
 
@@ -13,7 +12,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static final String CLASSID = ".ObjectDisplayGrid";
 
     private static AsciiPanel terminal;
-    private Char[][] objectGrid = null;
+    private Stack[][] objectGrid;
 
     private List<InputObserver> inputObservers = null;
 
@@ -27,7 +26,12 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         height = _height;
         terminal = new AsciiPanel(width, height);
 
-        objectGrid = new Char[width][height];
+        objectGrid = new Stack[width][height];
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                objectGrid[i][j] = new Stack<Character>();
+            }
+        }
         info = new LinkedList<String>();
         initializeDisplay();
 
@@ -80,10 +84,10 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     }
 
     public final void initializeDisplay() {
-        Char ch = new Char(' ');
+        char ch = ' ';
         for (int i = 0; i <= width; i++) {
             for (int j = 0; j <= height; j++) {
-                addObjectToDisplay(ch, i, j);
+                addObjectToDisplay(Character.valueOf(ch), i, j);
             }
         }
         terminal.repaint();
@@ -97,23 +101,32 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         }
     }
 
-    public void addObjectToDisplay(Char ch, int x, int y) {
+    public void addObjectToDisplay(char ch, int x, int y) {
         if ((0 <= x) && (x < objectGrid.length)) {
             if ((0 <= y) && (y < objectGrid[0].length)) {
-                objectGrid[x][y] = ch;
+                objectGrid[x][y].push(Character.valueOf(ch));
+                System.out.println(objectGrid[x][y]);
+                writeToTerminal(x, y);
+            }
+        }
+    }
+
+    public void removeObjectFromDisplay(int x, int y) {
+        if ((0 <= x) && (x < objectGrid.length)) {
+            if ((0 <= y) && (y < objectGrid[0].length)) {
+                objectGrid[x][y].pop();
                 writeToTerminal(x, y);
             }
         }
     }
 
     private void writeToTerminal(int x, int y) {
-        char ch = objectGrid[x][y].getChar();
+        char ch = (char) objectGrid[x][y].peek();
         terminal.write(ch, x, y);
         terminal.repaint();
     }
 
-    public Char[][] getObjectGrid() {
-        Char[][] tmpGrid = this.objectGrid;
-        return tmpGrid;
+    public Stack[][] getObjectGrid() {
+        return objectGrid;
     }
 }

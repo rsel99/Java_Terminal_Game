@@ -169,6 +169,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
+                                Thread.sleep(1000);
+                                processMonsterHit(monster, player);
+                                updatePlayerDisp(player);
+                                if (player.getHp() == 0) {
+                                    System.exit(0);
+                                }
                             }
                             break;
                         case 'j':
@@ -183,6 +189,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
+                                Thread.sleep(1000);
+                                processMonsterHit(monster, player);
+                                updatePlayerDisp(player);
+                                if (player.getHp() == 0) {
+                                    System.exit(0);
+                                }
                             }
                             break;
                         case 'k':
@@ -197,6 +209,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
+                                Thread.sleep(1000);
+                                processMonsterHit(monster, player);
+                                updatePlayerDisp(player);
+                                if (player.getHp() == 0) {
+                                    System.exit(0);
+                                }
                             }
                             break;
                         case 'l':
@@ -211,6 +229,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
+                                Thread.sleep(1000);
+                                processMonsterHit(monster, player);
+                                updatePlayerDisp(player);
+                                if (player.getHp() == 0) {
+                                    System.exit(0);
+                                }
                             }
                             break;
                         case 'p':

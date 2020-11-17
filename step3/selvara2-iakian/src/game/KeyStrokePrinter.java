@@ -6,6 +6,7 @@ import java.lang.ClassCastException;
 import java.util.Random;
 import java.lang.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class KeyStrokePrinter implements InputObserver, Runnable {
 
@@ -37,8 +38,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
     private void rest() {
         try {
-            Thread.sleep(20);
-        } catch (InterruptedException e) {
+            Thread.sleep(2000);
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -55,8 +56,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         }
         displayGrid.addObjectToDisplay(' ', ("HP: ").length(), 0);
         displayGrid.addObjectToDisplay(' ', 1 + ("HP: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', 2 + ("HP: ").length(), 0);
         displayGrid.addObjectToDisplay(' ', 4 + ("HP: ").length() + ("Score: ").length(), 0);
         displayGrid.addObjectToDisplay(' ', 5 + ("HP: ").length() + ("Score: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', 6 + ("HP: ").length() + ("Score: ").length(), 0);
+
 
         for (int i = 0; i < (String.valueOf(playerHp)).length(); i++) {
             displayGrid.addObjectToDisplay((String.valueOf(playerHp).charAt(i)), i + ("HP: ").length(), 0);
@@ -169,12 +173,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
-                                Thread.sleep(1000);
-                                processMonsterHit(monster, player);
-                                updatePlayerDisp(player);
-                                if (player.getHp() == 0) {
-                                    System.exit(0);
-                                }
+                                // rest();
+                                // processMonsterHit(monster, player);
+                                // updatePlayerDisp(player);
+                                // if (player.getHp() == 0) {
+                                //     System.exit(0);
+                                // }
                             }
                             break;
                         case 'j':
@@ -189,12 +193,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
-                                Thread.sleep(1000);
-                                processMonsterHit(monster, player);
-                                updatePlayerDisp(player);
-                                if (player.getHp() == 0) {
-                                    System.exit(0);
-                                }
+                                // rest();
+                                // processMonsterHit(monster, player);
+                                // updatePlayerDisp(player);
+                                // if (player.getHp() == 0) {
+                                //     System.exit(0);
+                                // }
                             }
                             break;
                         case 'k':
@@ -209,12 +213,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
-                                Thread.sleep(1000);
-                                processMonsterHit(monster, player);
-                                updatePlayerDisp(player);
-                                if (player.getHp() == 0) {
-                                    System.exit(0);
-                                }
+                                // rest();
+                                // processMonsterHit(monster, player);
+                                // updatePlayerDisp(player);
+                                // if (player.getHp() == 0) {
+                                //     System.exit(0);
+                                // }
                             }
                             break;
                         case 'l':
@@ -229,12 +233,12 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else if((next == 'S') || (next == 'T') || (next == 'H')){
                                 processMonsterHit(player, monster);
-                                Thread.sleep(1000);
-                                processMonsterHit(monster, player);
-                                updatePlayerDisp(player);
-                                if (player.getHp() == 0) {
-                                    System.exit(0);
-                                }
+                                // // rest();
+                                // processMonsterHit(monster, player);
+                                // updatePlayerDisp(player);
+                                // if (player.getHp() == 0) {
+                                //     System.exit(0);
+                                // }
                             }
                             break;
                         case 'p':

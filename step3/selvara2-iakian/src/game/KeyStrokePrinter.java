@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.lang.ClassCastException;
 import java.util.Random;
+import java.lang.*;
+import java.util.*;
 
 public class KeyStrokePrinter implements InputObserver, Runnable {
 
@@ -13,10 +15,13 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
     private ObjectDisplayGrid displayGrid;
     private Dungeon dungeon;
     private boolean endInvoked = false;
+    private Stack[][] objectGrid;
 
-    public KeyStrokePrinter(ObjectDisplayGrid grid, Dungeon dungeon) {
+    public KeyStrokePrinter(ObjectDisplayGrid grid, Dungeon dungeon, Stack[][] characters) {
         inputQueue = new ConcurrentLinkedQueue<>();
         displayGrid = grid;
+        objectGrid  = displayGrid.getObjectGrid();
+        System.out.println(objectGrid[0][0].peek());
         this.dungeon = dungeon;
     }
 
@@ -46,28 +51,28 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
             hpDigs++;
             temp /= 10;
         }
-        displayGrid.addObjectToDisplay(new Char(' '), ("HP: ").length(), 0);
-        displayGrid.addObjectToDisplay(new Char(' '), 1 + ("HP: ").length(), 0);
-        displayGrid.addObjectToDisplay(new Char(' '), 4 + ("HP: ").length() + ("Score: ").length(), 0);
-        displayGrid.addObjectToDisplay(new Char(' '), 5 + ("HP: ").length() + ("Score: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', ("HP: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', 1 + ("HP: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', 4 + ("HP: ").length() + ("Score: ").length(), 0);
+        displayGrid.addObjectToDisplay(' ', 5 + ("HP: ").length() + ("Score: ").length(), 0);
 
         for (int i = 0; i < (String.valueOf(playerHp)).length(); i++) {
-            displayGrid.addObjectToDisplay(new Char((String.valueOf(playerHp)).charAt(i)), i + ("HP: ").length(), 0);
+            displayGrid.addObjectToDisplay((String.valueOf(playerHp).charAt(i)), i + ("HP: ").length(), 0);
         }
         for (int i = 0; i < (String.valueOf(playerScore)).length(); i++) {
-            displayGrid.addObjectToDisplay(new Char((String.valueOf(playerScore)).charAt(i)), 4 + i + ("HP: ").length() + ("Score: ").length(), 0);
+            displayGrid.addObjectToDisplay((String.valueOf(playerScore).charAt(i)), 4 + i + ("HP: ").length() + ("Score: ").length(), 0);
         }
     }
 
     private void updateInfo(String info) {
         if (dungeon.getInfo().length() > 0) {
             for (int i = ("Info: ").length() - 1 ; i < 1 + dungeon.getWidth(); i++) {
-                displayGrid.addObjectToDisplay(new Char(' '), i, this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+                displayGrid.addObjectToDisplay(' ', i, this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
             }
         }
         dungeon.setInfo(info);
         for (int i = 0 ; i < dungeon.getInfo().length(); i++) {
-            displayGrid.addObjectToDisplay(new Char(dungeon.getInfo().charAt(i)), i + ("Info: ").length(), 
+            displayGrid.addObjectToDisplay(dungeon.getInfo().charAt(i), i + ("Info: ").length(), 
                                            this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
     }
@@ -143,523 +148,16 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     Structure loc = dungeon.getPlayerLoc();
                     Player player = loc.getPlayer();
                     boolean onDoor = player.getOnDoor();
-                    Char[][] objectGrid = displayGrid.getObjectGrid();
+                    // objectGrid = displayGrid.getObjectGrid();
+                    // System.out.println(objectGrid[0][0].peek());
                     
                     updatePlayerDisp(player);
-                    switch (ch) {
+                    switch(ch){
+                        char next;
+                        Room room = (Room) loc;
+                        Monster monster = ;
                         case 'h':
-                            try {
-                                Room room = (Room) loc;
-                                Monster monster = monsterNext(player, room, ch);
-                                if ((objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosX(player.getPosX() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());        
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosX(player.getPosX() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('.'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '#') ||
-                                                    objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-
-                                    ArrayList<Passage> passages = dungeon.getPassages();
-                                    Passage targPass = null;
-                                    for (Passage passage : passages) {
-                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
-                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                    }
-                                    player.setPosX(player.getPosX() - 1);
-                                    player.setPosX(room.getPosX() + player.getPosX());
-                                    player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targPass.setPlayer(player);
-                                    dungeon.setPlayerLoc(targPass);
-                                    loc = targPass;
-                                }
-                                else if (monster != null) {
-                                    processMonsterHit(player, monster);
-                                    Thread.sleep(1000);
-                                    processMonsterHit(monster, player);
-                                    updatePlayerDisp(player);
-                                    if (player.getHp() == 0) {
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                            catch(Exception e) {
-                                Passage passage = (Passage) loc;
-                                if ((objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '#' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), 
-                                                                       player.getPosX(), 
-                                                                       player.getPosY());
-                                        player.setPosX(player.getPosX() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
-                                                                       player.getPosX(),
-                                                                       player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX() - 1][player.getPosY()], player.getPosX(), + player.getPosY());
-                                        player.setPosX(player.getPosX() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('#'), player.getPosX(), player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '#') ||
-                                                    objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-
-                                    ArrayList<Room> rooms = dungeon.getRooms();
-                                    Room targRoom = null;
-                                    for (Room room : rooms) {
-                                        if (player.getPosX() == room.getPosX() + room.getWidth() - 1 &&
-                                            player.getPosY() < room.getPosY() + room.getHeight() + 1 &&
-                                            player.getPosY() > room.getPosY()) {
-                                            targRoom = room;
-                                            break;
-                                        }
-                                    }
-
-                                    player.setPosX(player.getPosX() - 1);
-                                    player.setPosX(player.getPosX() - targRoom.getPosX());
-                                    player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targRoom.setPlayer(player);
-                                    dungeon.setPlayerLoc(targRoom);
-                                    loc = targRoom;
-                                }
-                                else if ((objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == 'X') || (objectGrid[player.getPosX() - 1][player.getPosY()].getChar() == ' ')) {
-                                    System.out.println("Out of Bounds");
-                                }
-                                else {
-                                    System.out.println("Major implementation issue");
-                                    e.printStackTrace(System.out);
-                                }
-                            }
-                            break;
-                        case 'j':
-                            try {
-                                Room room = (Room) loc;
-                                Monster monster = monsterNext(player, room, ch);
-                                if ((objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '.' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), 
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosY(player.getPosY() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1], 
-                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosY(player.getPosY() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('.'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '#') ||
-                                                    objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-
-                                    ArrayList<Passage> passages = dungeon.getPassages();
-                                    Passage targPass = null;
-                                    for (Passage passage : passages) {
-                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
-                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                        else if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
-                                                 passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                    }
-
-                                    player.setPosY(player.getPosY() + 1);
-                                    player.setPosX(room.getPosX() + player.getPosX());
-                                    player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targPass.setPlayer(player);
-                                    dungeon.setPlayerLoc(targPass);
-                                    loc = targPass;
-                                }
-                                else if (monster != null) {
-                                    processMonsterHit(player, monster);
-                                    Thread.sleep(1000);
-                                    processMonsterHit(monster, player);
-                                    updatePlayerDisp(player);
-                                    if (player.getHp() == 0) {
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                            catch(Exception e) {
-                                Passage passage = (Passage) loc;
-                                if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '#')) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), 
-                                                                       player.getPosX(),
-                                                                       player.getPosY());
-                                        player.setPosY(player.getPosY() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
-                                                                       player.getPosX(),
-                                                                       player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() + 1], player.getPosX(), player.getPosY());
-                                        player.setPosY(player.getPosY() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('#'), player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '#') ||
-                                                    objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-
-                                    ArrayList<Room> rooms = dungeon.getRooms();
-                                    Room targRoom = null;
-                                    for (Room room : rooms) {
-                                        if (player.getPosX() > room.getPosX() && 
-                                            player.getPosX() < room.getPosX() + room.getWidth() &&
-                                            player.getPosY() == room.getPosY() + dungeon.getTopHeight()) {
-                                            targRoom = room;
-                                            break;
-                                        }
-                                    }
-
-                                    player.setPosY(player.getPosY() + 1);
-                                    player.setPosX(player.getPosX() - targRoom.getPosX());
-                                    player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), 
-                                                                   player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
-                                    player.setOnDoor(false);
-                                    targRoom.setPlayer(player);
-                                    dungeon.setPlayerLoc(targRoom);
-                                    loc = targRoom;
-                                }
-                                else if ((objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() + 1].getChar() == ' ')) {
-                                    System.out.println("Out of Bounds");
-                                }
-                                else {
-                                    System.out.println("Major implementation issue");
-                                    e.printStackTrace(System.out);
-                                }
-                            }
-                            break;
-                        case 'k':
-                            try {
-                                Room room = (Room) loc;
-                                Monster monster = monsterNext(player, room, ch);
-                                if ((objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '.' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), 
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosY(player.getPosY() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1], room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosY(player.getPosY() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('.'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '#') ||
-                                                    objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-
-                                    ArrayList<Passage> passages = dungeon.getPassages();
-                                    Passage targPass = null;
-                                    for (Passage passage : passages) {
-                                        if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
-                                            passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                        else if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
-                                                 passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                    }
-
-                                    player.setPosY(player.getPosY() - 1);
-                                    player.setPosX(room.getPosX() + player.getPosX());
-                                    player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targPass.setPlayer(player);
-                                    dungeon.setPlayerLoc(targPass);
-                                    loc = targPass;
-                                }
-                                else if (monster != null) {
-                                    processMonsterHit(player, monster);
-                                    Thread.sleep(1000);
-                                    processMonsterHit(monster, player);
-                                    updatePlayerDisp(player);
-                                    if (player.getHp() == 0) {
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                            catch(Exception e) {
-                                Passage passage = (Passage) loc;
-                                if ((objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '#')) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(),
-                                                player.getPosY());
-                                        player.setPosY(player.getPosY() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(),
-                                                player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX()][player.getPosY() - 1], player.getPosX(), player.getPosY());
-                                        player.setPosY(player.getPosY() - 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('#'), player.getPosX(), player.getPosY());
-                                    player.setPosY(player.getPosY() - 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '#') ||
-                                                    objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-
-                                    ArrayList<Room> rooms = dungeon.getRooms();
-                                    Room targRoom = null;
-
-                                    for (Room room : rooms) {
-                                        if (player.getPosX() > room.getPosX() && 
-                                            player.getPosX() < room.getPosX() + room.getWidth() &&
-                                            player.getPosY() == room.getPosY() + room.getHeight() + 1) {
-                                            targRoom = room;
-                                            break;
-                                        }
-                                    }
-                                    player.setPosY(player.getPosY() - 1);
-                                    player.setPosX(player.getPosX() - targRoom.getPosX());
-                                    player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), 
-                                                                   player.getPosX() + targRoom.getPosX(), 
-                                                                   player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targRoom.setPlayer(player);
-                                    dungeon.setPlayerLoc(targRoom);
-                                    loc = targRoom;
-                                }
-                                else if ((objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == 'X') || (objectGrid[player.getPosX()][player.getPosY() - 1].getChar() == ' ')) {
-                                    System.out.println("Out of Bounds");
-                                }
-                                else {
-                                    System.out.println("Major implementation issue");
-                                    e.printStackTrace(System.out);
-                                }
-                            }
-                            break;
-                        case 'l':
-                            try {
-                                Room room = (Room) loc;
-                                Monster monster = monsterNext(player, room, ch);
-                                if ((objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), 
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosX(player.getPosX() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()),
-                                                                       room.getPosX() + player.getPosX(),
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()], 
-                                                                    room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        player.setPosX(player.getPosX() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('.'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '#') ||
-                                                    objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-
-                                    ArrayList<Passage> passages = dungeon.getPassages();
-                                    Passage targPass = null;
-                                    for (Passage passage : passages) {
-                                        if (passage.getDoor1().getPosX() == room.getPosX() + player.getPosX() && 
-                                            passage.getDoor1().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                        else if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && 
-                                                 passage.getDoor2().getPosY() == player.getPosY() + room.getPosY()) {
-                                            targPass = passage;
-                                            break;
-                                        }
-                                    }
-
-                                    player.setPosX(player.getPosX() + 1);
-                                    player.setPosX(room.getPosX() + player.getPosX());
-                                    player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targPass.setPlayer(player);
-                                    dungeon.setPlayerLoc(targPass);
-                                    loc = targPass;
-                                }
-                                else if (monster != null) {
-                                    processMonsterHit(player, monster);
-                                    Thread.sleep(1000);
-                                    processMonsterHit(monster, player);
-                                    updatePlayerDisp(player);
-                                    if (player.getHp() == 0) {
-                                        System.exit(0);
-                                    }
-                                }
-                            }
-                            catch(Exception e) {
-                                Passage passage = (Passage) loc;
-                                if ((objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '#' )) {
-                                    // Change location
-                                    if (onDoor) {
-                                        displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-                                        player.setPosX(player.getPosX() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                        player.setOnDoor(false);
-                                    }
-                                    else {
-                                        displayGrid.addObjectToDisplay(objectGrid[player.getPosX() + 1][player.getPosY()], player.getPosX(), + player.getPosY());
-                                        player.setPosX(player.getPosX() + 1);
-                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    }
-                                }
-                                else if (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '+') {
-                                    // Change location and structure type
-                                    displayGrid.addObjectToDisplay(new Char('#'), player.getPosX(), player.getPosY());
-                                    player.setPosX(player.getPosX() + 1);
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(), player.getPosY());
-                                    
-                                    player.setOnDoor(true);
-                                }
-                                else if (onDoor && (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '#') ||
-                                                    objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == '.') {
-                                    displayGrid.addObjectToDisplay(new Char('+'), player.getPosX(), player.getPosY());
-
-                                    ArrayList<Room> rooms = dungeon.getRooms();
-                                    Room targRoom = null;
-                                    for (Room room : rooms) {
-                                        if (player.getPosX() == room.getPosX() &&
-                                            player.getPosY() < room.getPosY() + room.getHeight() + dungeon.getTopHeight() &&
-                                            player.getPosY() > room.getPosY() + dungeon.getTopHeight()) {
-                                            targRoom = room;
-                                            break;
-                                        }
-                                    }
-                                    player.setPosX(player.getPosX() + 1);
-                                    player.setPosX(player.getPosX() - targRoom.getPosX());
-                                    player.setPosY(player.getPosY() - (dungeon.getTopHeight() + targRoom.getPosY()));
-                                    displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX() + targRoom.getPosX(), player.getPosY() + dungeon.getTopHeight() + targRoom.getPosY());
-
-                                    player.setOnDoor(false);
-                                    targRoom.setPlayer(player);
-                                    dungeon.setPlayerLoc(targRoom);
-                                    loc = targRoom;
-                                }
-                                else if ((objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == 'X') || 
-                                         (objectGrid[player.getPosX() + 1][player.getPosY()].getChar() == ' ')) {
-                                    System.out.println("Out of Bounds");
-                                }
-                                else {
-                                    System.out.println("Major implementation issue");
-                                    e.printStackTrace(System.out);
-                                }
-                            }
+                            next = objectGrid[player.getposX]
                             break;
                         case 'E':
                         case 'e':
@@ -678,7 +176,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             break;
                     }
-                    // System.out.println(objectGrid[loc.getPosX() + player.getPosX()][dungeon.getTopHeight()+ loc.getPosY() + player.getPosY()].getChar());
+                    // System.out.println(objectGrid[loc.getPosX() + player.getPosX()][dungeon.getTopHeight()+ loc.getPosY() + player.getPosY()].peek());
                 }
             }
         }

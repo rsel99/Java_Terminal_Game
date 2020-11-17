@@ -115,17 +115,17 @@ public class Rogue implements Runnable {
 
         //displayGrid.fireUp();
         for (int i = 0; i < ("Pack: ").length(); i++) {
-            displayGrid.addObjectToDisplay((Character)("Pack: ").charAt(i), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+            displayGrid.addObjectToDisplay(("Pack: ").charAt(i), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
         for (int i = 0; i < ("Info: ").length(); i++) {
-            displayGrid.addObjectToDisplay((Character)("Info: ").charAt(i), i, 
+            displayGrid.addObjectToDisplay(("Info: ").charAt(i), i, 
                 this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
         for (int i = 0; i < ("HP: ").length(); i++) {
-            displayGrid.addObjectToDisplay((Character)("HP: ").charAt(i), i, 0);
+            displayGrid.addObjectToDisplay(("HP: ").charAt(i), i, 0);
         }
         for (int i = 0; i < ("Score: ").length(); i++) {
-            displayGrid.addObjectToDisplay((Character)("Score: ").charAt(i), i + ("HP: ").length() + 4, 0);
+            displayGrid.addObjectToDisplay(("Score: ").charAt(i), i + ("HP: ").length() + 4, 0);
         }
 
 
@@ -136,7 +136,7 @@ public class Rogue implements Runnable {
                 char temp;
                 if(k == 1) {
                     temp = getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j);
-                    displayGrid.addObjectToDisplay((Character) temp, i, j);
+                    displayGrid.addObjectToDisplay(temp, i, j);
                     characters[i][j].push((Character) temp);
                     // System.out.println(characters[i][j].peek());
                 }
@@ -145,16 +145,16 @@ public class Rogue implements Runnable {
                     if(disp.getClass() == Room.class) {
                         Displayable disp2 = (Displayable) objectGrid[i][j].pop();
                         if (disp2.getClass() == Passage.class) {
-                            displayGrid.addObjectToDisplay((Character) '+', i, j);
+                            displayGrid.addObjectToDisplay('+', i, j);
                             characters[i][j].push((Character) '+');
                             // System.out.println(characters[i][j].peek());
                         }
                         else {
                             temp = getDisplayChar(disp, i, j);
                             characters[i][j].push((Character) temp);
-                            displayGrid.addObjectToDisplay((Character) temp, i, j);
+                            displayGrid.addObjectToDisplay(temp, i, j);
                             temp = getDisplayChar(disp2, i, j);
-                            displayGrid.addObjectToDisplay((Character) temp, i, j);
+                            displayGrid.addObjectToDisplay(temp, i, j);
                             characters[i][j].push((Character) temp);
                             // System.out.println(characters[i][j].peek());
                         }
@@ -162,10 +162,10 @@ public class Rogue implements Runnable {
                     else {
                         Displayable disp2 = (Displayable) objectGrid[i][j].pop();
                         temp = getDisplayChar(disp, i, j);
-                        displayGrid.addObjectToDisplay((Character) temp, i, j);
+                        displayGrid.addObjectToDisplay(temp, i, j);
                         characters[i][j].push((Character) temp);
                         temp = getDisplayChar(disp2, i, j);
-                        displayGrid.addObjectToDisplay((Character) temp, i, j);
+                        displayGrid.addObjectToDisplay(temp, i, j);
                         characters[i][j].push((Character) temp);
                         // System.out.println(characters[i][j].peek());
                         // displayGrid.addObjectToDisplay(new Char ((getDisplayChar((Displayable)objectGrid[i][j].pop(), i, j))), i, j);

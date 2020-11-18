@@ -8,6 +8,8 @@ import java.lang.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+// import org.graalvm.compiler.nodes.cfg.HIRLoop;
+
 public class KeyStrokePrinter implements InputObserver, Runnable {
 
     private static int DEBUG = 1;
@@ -102,8 +104,19 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
     private Monster monsterNext(Player player, Room loc, char dir) {
         ArrayList<Monster> monsters = loc.getMonsters();
+        int playerX = player.getPosX();
+        int playerY = player.getPosY();
 
         for (Monster monster : monsters) {
+            if(player.getRoom() != monster.getRoom()){
+                // Structure location = dungeon.getPlayerLoc();
+                // Room ogRoom = (Room) location;
+                // int x = ogRoom.getPosX();
+                // int y = ogRoom.getPosY();
+                // Room newRoom = monster.getRoom();
+    
+                //Do something here
+            }
             switch (dir) {
                 case 'h':
                     if (monster.getPosX() == player.getPosX() - 1 && monster.getPosY() == player.getPosY()) {
@@ -161,93 +174,123 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     updatePlayerDisp(player);
                     switch(ch){
                         case 'h':
-                            // char next;
-                            Room room = (Room) loc;
-                            Monster monster = monsterNext(player, room, ch);
-                            // System.out.println("HELLO");
-                            char next = (char) objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
-                            if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                player.setPosX(player.getPosX() - 1);
+                            try{
+                                Room room = (Room) loc;
+                                Monster monster = monsterNext(player, room, (char) ch);
+                                // System.out.println(player);
+                                // System.out.println(room);
+                                // System.out.println(monster);
+                                // System.out.println((char) ch);
+                                char next = (char) objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    player.setPosX(player.getPosX() - 1);
+                                }
+                                else if((next == 'S') || (next == 'T') || (next == 'H')){
+                                    processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
+                                    processMonsterHit(monster, player);
+                                    updatePlayerDisp(player);
+                                    if (player.getHp() == 0) {
+                                        System.exit(0);
+                                    }
+                                }
                             }
-                            else if((next == 'S') || (next == 'T') || (next == 'H')){
-                                processMonsterHit(player, monster);
-                                // rest();
-                                // processMonsterHit(monster, player);
-                                // updatePlayerDisp(player);
-                                // if (player.getHp() == 0) {
-                                //     System.exit(0);
-                                // }
+                            catch(Exception e){
+                                System.out.println("Major implementation issue");
+                                e.printStackTrace(System.out);
                             }
                             break;
                         case 'j':
-                            room = (Room) loc;
-                            monster = monsterNext(player, room, ch);
-                            // System.out.println("HELLO");
-                            next = (char) objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
-                            if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() + 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                player.setPosX(player.getPosX() + 1);
+                            try{
+                                Room room = (Room) loc;
+                                Monster monster = monsterNext(player, room, (char) ch);
+                                // System.out.println("HELLO");
+                                char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].peek();
+                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1);
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    player.setPosY(player.getPosY() + 1);
+                                }
+                                else if((next == 'S') || (next == 'T') || (next == 'H')){
+                                    processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
+                                    processMonsterHit(monster, player);
+                                    updatePlayerDisp(player);
+                                    if (player.getHp() == 0) {
+                                        System.exit(0);
+                                    }
+                                }
                             }
-                            else if((next == 'S') || (next == 'T') || (next == 'H')){
-                                processMonsterHit(player, monster);
-                                // rest();
-                                // processMonsterHit(monster, player);
-                                // updatePlayerDisp(player);
-                                // if (player.getHp() == 0) {
-                                //     System.exit(0);
-                                // }
+                            catch(Exception e){
+                                System.out.println("Major implementation issue");
+                                e.printStackTrace(System.out);
                             }
                             break;
                         case 'k':
-                            room = (Room) loc;
-                            monster = monsterNext(player, room, ch);
-                            // System.out.println("HELLO");
-                            next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].peek();
-                            if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1);
-                                displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                player.setPosY(player.getPosY() - 1);
+                            try{
+                                Room room = (Room) loc;
+                                Monster monster = monsterNext(player, room, (char) ch);
+                                // System.out.println("HELLO");
+                                char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].peek();
+                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1);
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    player.setPosY(player.getPosY() - 1);
+                                }
+                                else if((next == 'S') || (next == 'T') || (next == 'H')){
+                                    processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
+                                    processMonsterHit(monster, player);
+                                    updatePlayerDisp(player);
+                                    if (player.getHp() == 0) {
+                                        System.exit(0);
+                                    }
+                                }
                             }
-                            else if((next == 'S') || (next == 'T') || (next == 'H')){
-                                processMonsterHit(player, monster);
-                                // rest();
-                                // processMonsterHit(monster, player);
-                                // updatePlayerDisp(player);
-                                // if (player.getHp() == 0) {
-                                //     System.exit(0);
-                                // }
+                            catch(Exception e){
+                                System.out.println("Major implementation issue");
+                                e.printStackTrace(System.out);
                             }
                             break;
                         case 'l':
-                            room = (Room) loc;
-                            monster = monsterNext(player, room, ch);
-                            // System.out.println("HELLO");
-                            next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].peek();
-                            if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1);
-                                displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                player.setPosY(player.getPosY() + 1);
+                            try{
+                                Room room = (Room) loc;
+                                Monster monster = monsterNext(player, room, (char) ch);
+                                System.out.println(player);
+                                System.out.println(room);
+                                System.out.println(monster);
+                                System.out.println((char) ch);
+                                char next = (char) objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() + 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    player.setPosX(player.getPosX() + 1);
+                                }
+                                else if((next == 'S') || (next == 'T') || (next == 'H')){
+                                    processMonsterHit(player, monster);
+                                    Thread.sleep(1000);
+                                    processMonsterHit(monster, player);
+                                    updatePlayerDisp(player);
+                                    if (player.getHp() == 0) {
+                                        System.exit(0);
+                                    }
+                                
+                                }
                             }
-                            else if((next == 'S') || (next == 'T') || (next == 'H')){
-                                processMonsterHit(player, monster);
-                                // // rest();
-                                // processMonsterHit(monster, player);
-                                // updatePlayerDisp(player);
-                                // if (player.getHp() == 0) {
-                                //     System.exit(0);
-                                // }
+                            catch(Exception e){
+                                System.out.println("Major implementation issue");
+                                e.printStackTrace(System.out);
                             }
                             break;
                         case 'p':
-                            room = (Room) loc;
+                            Room room = (Room) loc;
                             for(int i = 0; i < (this.dungeon.getWidth() - 10); i++){
                                 displayGrid.addObjectToDisplay(' ', 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
                             }
                             displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                            next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                            char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
                             if((next == ']') || (next == ')') || (next == '?')){  
                                 pack.add(next);
                                 // System.out.println(pack.get(0));

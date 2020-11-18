@@ -21,4 +21,8 @@ public class Monster extends Creature {
         this.serial = serial;
         System.out.println("Monster: setID: room: " + room + ", serial: " + serial);
     }
+
+    public int getRoom(){
+        return this.room;
+    }
 }

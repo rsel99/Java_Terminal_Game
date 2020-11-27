@@ -115,6 +115,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     public void removeObjectFromDisplay(int x, int y) {
         if ((0 <= x) && (x < width)) {
             if ((0 <= y) && (y < height)) {
+                System.out.println(objectGrid[x][y]);
                 objectGrid[x][y].pop();
                 writeToTerminal(x, y);
             }

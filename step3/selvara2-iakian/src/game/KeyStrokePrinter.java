@@ -371,18 +371,18 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
-                                        if (player.getPosX() == room.getPosX() + room.getWidth() - 1
-                                                && player.getPosY() < room.getPosY() + room.getHeight() + 1
-                                                && player.getPosY() > room.getPosY()) {
+                                        if (player.getPosX() > room.getPosX()
+                                                && player.getPosX() < room.getPosX() + room.getWidth()
+                                                && player.getPosY() == room.getPosY() + room.getHeight() + 1) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
                                     if (targRoom == null) {
                                         for (Room room : rooms) {
-                                            if (player.getPosX() == room.getPosX()
-                                                    && player.getPosY() < room.getPosY() + room.getHeight() + 1
-                                                    && player.getPosY() > room.getPosY()) {
+                                            if (player.getPosX() > room.getPosX()
+                                                    && player.getPosX() < room.getPosX() + room.getWidth()
+                                                    && player.getPosY() == room.getPosY()) {
                                                 targRoom = room;
                                                 break;
                                             }
@@ -494,18 +494,18 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
-                                        if (player.getPosY() == room.getPosY() + room.getHeight() - 1
-                                                && player.getPosY() < room.getPosY() + room.getHeight() + 1
-                                                && player.getPosY() > room.getPosY()) {
+                                        if (player.getPosX() > room.getPosX()
+                                                && player.getPosX() < room.getPosX() + room.getWidth()
+                                                && player.getPosY() == room.getPosY() + room.getHeight() + 1) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
                                     if (targRoom == null) {
                                         for (Room room : rooms) {
-                                            if (player.getPosY() == room.getPosY()
-                                                    && player.getPosY() < room.getPosY() + room.getHeight() + 1
-                                                    && player.getPosY() > room.getPosY()) {
+                                            if (player.getPosX() > room.getPosX()
+                                                    && player.getPosX() < room.getPosX() + room.getWidth()
+                                                    && player.getPosY() == room.getPosY()) {
                                                 targRoom = room;
                                                 break;
                                             }

@@ -182,10 +182,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 // System.out.println(monster);
                                 // System.out.println((char) ch);
                                 char next = (char) objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                if (onDoor) {
+                                    
+                                }
                                 if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     player.setPosX(player.getPosX() - 1);
+
+                                    if (next == '+') {
+                                        player.setOnDoor(true);
+                                    }
                                 }
                                 else if((next == 'S') || (next == 'T') || (next == 'H')){
                                     processMonsterHit(player, monster);
@@ -197,7 +204,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     }
                                 }
                             }
-                            catch(Exception e){
+                            catch(ClassCastException e){
+
+
+
                                 System.out.println("Major implementation issue");
                                 e.printStackTrace(System.out);
                             }

@@ -182,16 +182,37 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 // System.out.println(monster);
                                 // System.out.println((char) ch);
                                 char next = (char) objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
-                                if (onDoor) {
-                                    
-                                }
-                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                    player.setPosX(player.getPosX() - 1);
+                                if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')) {
 
-                                    if (next == '+') {
-                                        player.setOnDoor(true);
+                                    if (onDoor) {
+                                        ArrayList<Passage> passages = dungeon.getPassages();
+                                        Passage targPass = null;
+                                        for (Passage passage : passages) {
+                                            if (passage.getDoor2().getPosX() == room.getPosX() + player.getPosX() && passage.getDoor2().getPosY() == player.getPosY()
+                                                                                                                        + room.getPosY()) {
+                                                targPass = passage;
+                                                break;
+                                            }
+                                        }
+                                        player.setPosX(player.getPosX() - 1);
+                                        player.setPosX(room.getPosX() + player.getPosX());
+                                        player.setPosY(dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        displayGrid.addObjectToDisplay(new Char(player.getType()), player.getPosX(),
+                                                player.getPosY());
+
+                                        player.setOnDoor(false);
+                                        targPass.setPlayer(player);
+                                        dungeon.setPlayerLoc(targPass);
+                                        loc = targPass;
+                                    }
+                                    else {
+                                        displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        player.setPosX(player.getPosX() - 1);
+
+                                        if (next == '+') {
+                                            player.setOnDoor(true);
+                                        }
                                     }
                                 }
                                 else if((next == 'S') || (next == 'T') || (next == 'H')){
@@ -205,9 +226,19 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                             }
                             catch(ClassCastException e){
+                                Passage passage = (Passage) loc;
+                                char next = (char) objectGrid[player.getPosX() - 1][player.getPosY()].peek();
+                                if (onDoor) {
+                                    
+                                }
+                                else if (next == '#') {
 
+                                }
+                                else if (next == '+') {
 
-
+                                }
+                            }
+                            catch (Exception e) {
                                 System.out.println("Major implementation issue");
                                 e.printStackTrace(System.out);
                             }

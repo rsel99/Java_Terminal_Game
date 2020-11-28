@@ -1,12 +1,22 @@
 package game;
+import java.util.HashMap;
 
 public class Displayable {
 
     protected int maxhit, hpMoves, Hp, v, x, y, w, h, visibility;
     protected char t;
+    protected HashMap<String, Action> actions;
 
     public Displayable(){
         System.out.println("Displayable: constructor, " + this);
+    }
+
+    public void initActions() {
+        actions = new HashMap<String, Action>();
+    }
+
+    public void setAction(Action action) {
+        actions.put(action.getName(), action);
     }
 
     public void setInvisible() {
@@ -101,5 +111,9 @@ public class Displayable {
     }
     public int getVisibility() {
         return this.visibility;
+    }
+
+    public HashMap<String, Action> getActions() {
+        return this.actions;
     }
 }

@@ -30,11 +30,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 objectGrid[i][j] = new Stack<Character>();
-                objectGrid[i][j].push((Character)'-');
+                // objectGrid[i][j].push((Character)'-');
             }
         }
         info = new LinkedList<String>();
-        initializeDisplay();
+        // initializeDisplay();
 
         super.add(terminal);
         super.setSize(width * 9, height * 17);

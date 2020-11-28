@@ -186,8 +186,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(), 
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(), 
+                                        //                                dungeon.getTopHeight() + room.getPosY() + player.getPosY());
 
                                         ArrayList<Passage> passages = dungeon.getPassages();
                                         Passage targPass = null;
@@ -245,7 +245,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 char next = (char) objectGrid[player.getPosX() - 1][player.getPosY()].peek();
                                 if (onDoor) {
                                     displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
-                                    displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
+                                    // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
@@ -306,8 +306,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(),
                                                 dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(),
-                                                dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(),
+                                        //         dungeon.getTopHeight() + room.getPosY() + player.getPosY());
 
                                         ArrayList<Passage> passages = dungeon.getPassages();
                                         Passage targPass = null;
@@ -366,28 +366,24 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 char next = (char) objectGrid[player.getPosX()][player.getPosY() + 1].peek();
                                 if (onDoor) {
                                     displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
-                                    displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
+                                    // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
                                         if (player.getPosX() > room.getPosX()
                                                 && player.getPosX() < room.getPosX() + room.getWidth()
-                                                && player.getPosY() == room.getPosY() + room.getHeight() - 1) {
+                                                && player.getPosY() == dungeon.getTopHeight() + room.getPosY() + 
+                                                                        room.getHeight()) {
                                             targRoom = room;
                                             break;
                                         }
                                     }
                                     if (targRoom == null) {
                                         for (Room room : rooms) {
-                                            if (room.getRoomNum() == 3) {
-                                                System.out.println("playerX: " + player.getPosX());
-                                                System.out.println("playerY: " + player.getPosY());
-                                                System.out.println("");
-                                            }
                                             if (player.getPosX() > room.getPosX()
                                                     && player.getPosX() < room.getPosX() + room.getWidth()
-                                                    && player.getPosY() == room.getPosY()) {
+                                                    && player.getPosY() == dungeon.getTopHeight() + room.getPosY()) {
                                                 targRoom = room;
                                                 break;
                                             }
@@ -434,8 +430,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(),
                                                 dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(),
-                                                dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(),
+                                        //         dungeon.getTopHeight() + room.getPosY() + player.getPosY());
 
                                         ArrayList<Passage> passages = dungeon.getPassages();
                                         Passage targPass = null;
@@ -494,14 +490,14 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 char next = (char) objectGrid[player.getPosX()][player.getPosY() - 1].peek();
                                 if (onDoor) {
                                     displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
-                                    displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
+                                    // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;
                                     for (Room room : rooms) {
                                         if (player.getPosX() > room.getPosX()
                                                 && player.getPosX() < room.getPosX() + room.getWidth()
-                                                && player.getPosY() == room.getPosY() + room.getHeight() + 1) {
+                                                && player.getPosY() == dungeon.getTopHeight() + room.getPosY() + room.getHeight() - 1) {
                                             targRoom = room;
                                             break;
                                         }
@@ -510,7 +506,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         for (Room room : rooms) {
                                             if (player.getPosX() > room.getPosX()
                                                     && player.getPosX() < room.getPosX() + room.getWidth()
-                                                    && player.getPosY() == room.getPosY()) {
+                                                    && player.getPosY() == dungeon.getTopHeight() + room.getPosY()) {
                                                 targRoom = room;
                                                 break;
                                             }
@@ -559,8 +555,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
-                                        displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(), 
-                                                                       dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(), 
+                                        //                                dungeon.getTopHeight() + room.getPosY() + player.getPosY());
 
                                         ArrayList<Passage> passages = dungeon.getPassages();
                                         Passage targPass = null;
@@ -618,7 +614,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 char next = (char) objectGrid[player.getPosX() + 1][player.getPosY()].peek();
                                 if (onDoor) {
                                     displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
-                                    displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
+                                    // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
 
                                     ArrayList<Room> rooms = dungeon.getRooms();
                                     Room targRoom = null;

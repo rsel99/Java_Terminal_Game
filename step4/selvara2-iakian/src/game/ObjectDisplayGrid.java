@@ -30,11 +30,11 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 objectGrid[i][j] = new Stack<Character>();
-                objectGrid[i][j].push((Character)'-');
+                // objectGrid[i][j].push((Character)'-');
             }
         }
         info = new LinkedList<String>();
-        initializeDisplay();
+        // initializeDisplay();
 
         super.add(terminal);
         super.setSize(width * 9, height * 17);
@@ -87,7 +87,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     public final void initializeDisplay() {
         //char ch = ' ';
         for (int i = 0; i <= width; i++) {
-            for (int j = 0; j <= height; j++) {
+            for (int j = (height - 1); j >= (height - 4); j-=2) {
                 addObjectToDisplay(' ', i, j);
             }
         }
@@ -100,6 +100,10 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         } else {
             System.out.println(CLASSID + ".ObjectDisplayGrid(...) requestFocusInWindow FAILED");
         }
+    }
+
+    public Stack getStack(int i, int j){
+        return objectGrid[i][j];
     }
 
     public void addObjectToDisplay(char ch, int x, int y) {

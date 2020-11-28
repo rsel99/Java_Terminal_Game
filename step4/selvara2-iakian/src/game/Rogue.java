@@ -111,21 +111,19 @@ public class Rogue implements Runnable {
             }
         }
 
-        displayGrid.initializeDisplay();
+        // displayGrid.initializeDisplay();
 
         //displayGrid.fireUp();
-        for (int i = 0; i < ("Pack: ").length(); i++) {
-            displayGrid.addObjectToDisplay(("Pack: ").charAt(i), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+        for (int i = 0; i < this.dungeon.getWidth(); i++) {
+            displayGrid.addObjectToDisplay(("Pack:                                                                           ").charAt(i), i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+            displayGrid.addObjectToDisplay(("Info:                                                                           ").charAt(i), i, this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
         }
-        for (int i = 0; i < ("Info: ").length(); i++) {
-            displayGrid.addObjectToDisplay(("Info: ").charAt(i), i, 
-                this.dungeon.getBottomHeight() / 2 + this.dungeon.getTopHeight() + this.dungeon.getGameHeight());
+
+        for (int i = 0; i < ("HP:     ").length(); i++) {
+            displayGrid.addObjectToDisplay(("HP:     ").charAt(i), i, 0);
         }
-        for (int i = 0; i < ("HP: ").length(); i++) {
-            displayGrid.addObjectToDisplay(("HP: ").charAt(i), i, 0);
-        }
-        for (int i = 0; i < ("Score: ").length(); i++) {
-            displayGrid.addObjectToDisplay(("Score: ").charAt(i), i + ("HP: ").length() + 4, 0);
+        for (int i = 0; i < ("Score:     ").length(); i++) {
+            displayGrid.addObjectToDisplay(("Score:     ").charAt(i), i + ("HP:     ").length() + 4, 0);
         }
 
 

@@ -111,7 +111,7 @@ public class Rogue implements Runnable {
             }
         }
 
-        displayGrid.initializeDisplay();
+        // displayGrid.initializeDisplay();
 
         //displayGrid.fireUp();
         for (int i = 0; i < ("Pack: ").length(); i++) {

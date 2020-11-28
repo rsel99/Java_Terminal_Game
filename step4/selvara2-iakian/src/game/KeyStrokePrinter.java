@@ -420,7 +420,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         for (Room room : rooms) {
                                             if (player.getPosX() > room.getPosX()
                                                     && player.getPosX() < room.getPosX() + room.getWidth()
-                                                    && player.getPosY() == room.getPosY() + room.getHeight() + 1) {
+                                                    && player.getPosY() == dungeon.getTopHeight() + room.getPosY() + room.getHeight()) {
                                                 targRoom = room;
                                                 break;
                                             }
@@ -429,7 +429,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                             for (Room room : rooms) {
                                                 if (player.getPosX() > room.getPosX()
                                                         && player.getPosX() < room.getPosX() + room.getWidth()
-                                                        && player.getPosY() == room.getPosY()) {
+                                                        && player.getPosY() == dungeon.getTopHeight() + room.getPosY()) {
                                                     targRoom = room;
                                                     break;
                                                 }
@@ -555,7 +555,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         for (Room room : rooms) {
                                             if (player.getPosX() > room.getPosX()
                                                     && player.getPosX() < room.getPosX() + room.getWidth()
-                                                    && player.getPosY() == room.getPosY() + room.getHeight() + 1) {
+                                                    && player.getPosY() == dungeon.getTopHeight() + room.getPosY() + room.getHeight() - 1) {
                                                 targRoom = room;
                                                 break;
                                             }
@@ -564,7 +564,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                             for (Room room : rooms) {
                                                 if (player.getPosX() > room.getPosX()
                                                         && player.getPosX() < room.getPosX() + room.getWidth()
-                                                        && player.getPosY() == room.getPosY()) {
+                                                        && player.getPosY() == dungeon.getTopHeight() + room.getPosY()) {
                                                     targRoom = room;
                                                     break;
                                                 }

@@ -1008,7 +1008,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(0)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(0)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1136,7 +1136,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(1)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(1)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1265,7 +1265,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(2)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(2)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1393,7 +1393,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(3)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(3)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1525,7 +1525,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(4)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(4)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }

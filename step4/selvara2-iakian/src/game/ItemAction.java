@@ -12,9 +12,9 @@ public class ItemAction extends Action {
         System.out.println("ItemAction: constructor: " + owner + ", " + this);
     }
 
-    public String getName() {
-        return this.name;
-    }
+    // public String getName() {
+    //     return this.name;
+    // }
 
     public String getType() {
         return this.type;

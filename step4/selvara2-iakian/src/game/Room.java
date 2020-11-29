@@ -39,6 +39,10 @@ public class Room extends Structure {
         System.out.println("Room: addItem " + item);
     }
 
+    public void removeItem(int i){
+        this.items.remove(i);
+    }
+
     public ArrayList<Item> getItems() {
         return this.items;
     }

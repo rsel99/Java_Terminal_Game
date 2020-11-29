@@ -16,4 +16,8 @@ public class Sword extends Item{
         this.serial = serial;
         System.out.println("Sword: setID: room: " + room + ", serial: " + serial);
     }
+
+    public String getName(){
+        return this.name;
+    }
 }

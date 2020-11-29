@@ -1,10 +1,12 @@
 package game;
+import java.util.*;
 
 public class Creature extends Displayable {
 
     protected int h, hpm;
     protected String name;
-    protected CreatureAction da, ha;
+    protected ArrayList<CreatureAction> da = new ArrayList<CreatureAction>();
+    protected ArrayList<CreatureAction> ha = new ArrayList<CreatureAction>();
 
     public Creature(String name) {
         this.name = name;
@@ -21,15 +23,23 @@ public class Creature extends Displayable {
     //     System.out.println("Creature: setHpMoves to " + hpm);
     // }
 
-    public void setDeathAction(CreatureAction da){
-        this.da = da;
-        System.out.println("Creature: setDeathAction to " + da);
+    public void setDeathAction(CreatureAction a){
+        this.da.add(a);
+        System.out.println("Creature: setDeathAction to " + a);
     }
 
-    public void setHitAction(CreatureAction ha){
+    public void setHitAction(CreatureAction a){
         //(type CreatureAction???)
-        this.ha = ha;
-        System.out.println("Creature: setHitAction to " + ha);
+        this.ha.add(a);
+        System.out.println("Creature: setHitAction to " + a);
+    }
+
+    public ArrayList<CreatureAction> getHitActions(){
+        return this.ha;
+    }
+
+    public ArrayList<CreatureAction> getDeathActions(){
+        return this.da;
     }
     
     public String getName() {

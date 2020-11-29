@@ -16,4 +16,8 @@ public class Scroll extends Item {
         this.serial = serial;
         System.out.println("Scroll: setID: room: " + room + ", serial: " + serial);
     }
+
+    public String getName(){
+        return this.name;
+    }
 }

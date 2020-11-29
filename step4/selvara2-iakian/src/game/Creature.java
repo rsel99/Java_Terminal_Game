@@ -9,6 +9,7 @@ public class Creature extends Displayable {
     protected ArrayList<CreatureAction> ha = new ArrayList<CreatureAction>();
 
     public Creature(String name) {
+        super();
         this.name = name;
         System.out.println("Creature: constructor, " + this);
     }

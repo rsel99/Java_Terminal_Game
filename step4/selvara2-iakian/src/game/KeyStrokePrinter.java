@@ -124,12 +124,38 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         else if (defender.getHp() - damage <= 0) {
             defender.setHp(0);
             defender.setMaxHit(0);
+            //defender death actions
+            if(defender.getActions().size() > 0){
+                for(Action action : defender.getActions()){
+                    if(((CreatureAction) action).getType().equals("death")){
+                        processDeathAction(action, defender);
+                    }
+                }
+            }
             updateInfo(String.format("%s died", defender.getName()));
         }
         else if (defender.getHp() - damage > 0) {
             defender.setHp(defender.getHp() - damage);
+            //defender hit actions
+            if(defender.getActions().size() > 0){
+                for(Action action : defender.getActions()){
+                    if(((CreatureAction) action).getType().equals("hit")){
+                        processHitAction(action, defender);
+                    }
+                }
+            }
             updateInfo(String.format("%s --> %s: -%d hp for %s", attacker.getName(), defender.getName(), damage, defender.getName()));
         }
+    }
+
+    private void processHitAction(Action action, Creature creature){
+        //fill in
+        System.out.println("processing hit action");
+    }
+
+    private void processDeathAction(Action action, Creature creature){
+        //fill in
+        System.out.println("processing death action");
     }
 
     private void processAddPack(Player player, Room room, char currItem){
@@ -329,7 +355,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -463,7 +489,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -599,7 +625,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -735,7 +761,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     
                                     }
@@ -951,9 +977,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(0).getType() == ']'){
                                         player.setArmor(player.getItemFromPack(0));
+                                        clearLine(0);
                                         // processDropPack(player, room, 0, input);
                                         System.out.println("wearing armor");
                                     }
@@ -977,9 +1004,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(0).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(0));
+                                        clearLine(0);
                                         System.out.println("wielding sword");
                                     }
                                     else{
@@ -1001,16 +1029,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(0).getType() == '?'){
                                         if(((Displayable) player.getItemFromPack(0)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(0)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(0);
+                                            clearLine(0);
                                             System.out.println("reading scroll");
                                         }
                                         else{
@@ -1076,9 +1105,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 1){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(1).getType() == ']'){
                                         player.setArmor(player.getItemFromPack(1));
+                                        clearLine(0);
                                         // processDropPack(player, room, 1, input);
                                         System.out.println("wearing armor");
                                     }
@@ -1102,10 +1132,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(1).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(1));
                                         System.out.println("wielding sword");
+                                        clearLine(0);
                                     }
                                     else{
                                         String message = "Invalid use weapon request";
@@ -1126,16 +1157,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(1).getType() == '?'){
                                         if(((Displayable) player.getItemFromPack(1)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(1)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(1);
+                                            clearLine(0);
                                             System.out.println("reading scroll");
                                         }
                                         else{
@@ -1202,9 +1234,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 2){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(2).getType() == ']'){
                                         player.setArmor(player.getItemFromPack(2));
+                                        clearLine(0);
                                         // processDropPack(player, room, 2, input);
                                         System.out.println("wearing armor");
                                     }
@@ -1228,9 +1261,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(2).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(2));
+                                        clearLine(0);
                                         System.out.println("wielding sword");
                                     }
                                     else{
@@ -1252,16 +1286,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    // clearLine(0);
                                     if(player.getItemFromPack(2).getType() == '?'){
                                         if(((Displayable) player.getItemFromPack(2)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(2)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(2);
+                                            clearLine(0);
                                             System.out.println("reading scroll");
                                         }
                                         else{
@@ -1328,9 +1363,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 3){
                                     Room room = (Room) loc;
-                                    clearLine(0);
                                     if(player.getItemFromPack(3).getType() == ']'){
                                         player.setArmor(player.getItemFromPack(3));
+                                        clearLine(0);
                                         // processDropPack(player, room, 3, input);
                                         System.out.println("wearing armor");
                                     }
@@ -1354,10 +1389,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    
                                     if(player.getItemFromPack(3).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(3));
                                         System.out.println("wielding sword");
+                                        clearLine(0);
                                     }
                                     else{
                                         String message = "Invalid use weapon request";
@@ -1378,16 +1414,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    
                                     if(player.getItemFromPack(3).getType() == '?'){
                                         if(((Displayable) player.getItemFromPack(3)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(3)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(3);
+                                            clearLine(0);
                                             System.out.println("reading scroll");
                                         }
                                         else{
@@ -1453,9 +1490,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 4){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    
                                     if(player.getItemFromPack(4).getType() == ']'){
                                         player.setArmor(player.getItemFromPack(4));
+                                        clearLine(0);
                                         // processDropPack(player, room, 4, input);
                                         // System.out.println("wearing armor");
                                         String message = "Player is wearing armor";
@@ -1483,10 +1521,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    
                                     if(player.getItemFromPack(4).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(4));
                                         System.out.println("wielding sword");
+                                        clearLine(0);
                                     }
                                     else{
                                         String message = "Invalid use weapon request";
@@ -1507,16 +1546,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(2);
                                 if(player.getPackSize() > 0){
                                     Room room = (Room) loc;
-                                    clearLine(0);
+                                    
                                     if(player.getItemFromPack(4).getType() == '?'){
                                         if(((Displayable) player.getItemFromPack(4)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(4)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage();
+                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(4);
+                                            clearLine(0);
                                             System.out.println("reading scroll");
                                         }
                                         else{
@@ -1564,13 +1604,13 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         index += 1;
                                         String message = " ";
                                         if(player.getItemFromPack(i).getType() == ']'){
-                                            message = ((Armor) player.getItemFromPack(i)).getName();
+                                            message = String.valueOf((player.getItemFromPack(i)).getIntValue()) + " Armor";
                                             if(player.getArmor() != null && player.getItemFromPack(i) == player.getArmor()){
                                                 message = message + " (a)";
                                             }
                                         }
                                         else if(player.getItemFromPack(i).getType() == ')'){
-                                            message = ((Sword) player.getItemFromPack(i)).getName();
+                                            message = String.valueOf((player.getItemFromPack(i)).getIntValue()) + " Sword";
                                             if(player.getWeapon() != null && player.getItemFromPack(i) == player.getWeapon()){
                                                 message = message + " (w)";
                                             }
@@ -1713,7 +1753,6 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     displayGrid.addObjectToDisplay(m.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                 }
                                 return false;
-                                // fix this!
                             }
                             break;
                         default:

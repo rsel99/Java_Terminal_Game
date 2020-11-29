@@ -124,12 +124,38 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         else if (defender.getHp() - damage <= 0) {
             defender.setHp(0);
             defender.setMaxHit(0);
+            //defender death actions
+            if(defender.getActions().size() > 0){
+                for(Action action : defender.getActions()){
+                    if(((CreatureAction) action).getType().equals("death")){
+                        processDeathAction(action, defender);
+                    }
+                }
+            }
             updateInfo(String.format("%s died", defender.getName()));
         }
         else if (defender.getHp() - damage > 0) {
             defender.setHp(defender.getHp() - damage);
+            //defender hit actions
+            if(defender.getActions().size() > 0){
+                for(Action action : defender.getActions()){
+                    if(((CreatureAction) action).getType().equals("hit")){
+                        processHitAction(action, defender);
+                    }
+                }
+            }
             updateInfo(String.format("%s --> %s: -%d hp for %s", attacker.getName(), defender.getName(), damage, defender.getName()));
         }
+    }
+
+    private void processHitAction(Action action, Creature creature){
+        //fill in
+        System.out.println("processing hit action");
+    }
+
+    private void processDeathAction(Action action, Creature creature){
+        //fill in
+        System.out.println("processing death action");
     }
 
     private void processAddPack(Player player, Room room, char currItem){
@@ -329,7 +355,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -463,7 +489,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -599,7 +625,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     }
                                 }
@@ -735,7 +761,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         processMonsterHit(monster, player);
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
-                                            System.exit(0);
+                                            return false;
                                         }
                                     
                                     }

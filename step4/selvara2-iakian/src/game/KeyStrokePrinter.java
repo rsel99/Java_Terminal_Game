@@ -1712,7 +1712,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 for(int i = 0; i < m.length(); i++){
                                     displayGrid.addObjectToDisplay(m.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                 }
-                                System.exit(0);
+                                return false;
                                 // fix this!
                             }
                             break;

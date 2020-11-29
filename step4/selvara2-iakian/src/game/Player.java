@@ -1,4 +1,5 @@
 package game;
+import java.util.*;
 
 public class Player extends Creature {
 
@@ -7,6 +8,7 @@ public class Player extends Creature {
     protected int room, serial;
     protected boolean onDoor = false;
     protected int score = 0;
+    protected ArrayList<Item> pack = new ArrayList<Item>();
 
     public Player(String name, int room, int serial){
         super(name);
@@ -34,6 +36,28 @@ public class Player extends Creature {
         this.score = score;
     }
 
+    public void addToPack(Item item){
+        this.pack.add(item);
+    }
+
+    public int getPackSize(){
+        return this.pack.size();
+    }
+
+    public Item getItemFromPack(int i){
+        return pack.get(i);
+    }
+
+    public void removeItemFromPack(int i){
+        // (pack.get(i)).setPosX(x);
+        // (pack.get(i)).setPosY(y);
+        this.pack.remove(i);
+    }
+
+    public ArrayList<Item> getPack(){
+        return this.pack;
+    }
+
     public int getRoom() {
         return this.room;
     }
@@ -48,6 +72,22 @@ public class Player extends Creature {
 
     public int getScore() {
         return this.score;
+    }
+
+    public Item getArmor(){
+        return this.armor;
+    }
+
+    public Item getWeapon(){
+        return this.sword;
+    }
+
+    public void changeArmor(){
+        this.armor = null;
+    }
+
+    public void dropWeapon(){
+        this.sword = null;
     }
 
     // public void setID(int room, int serial){

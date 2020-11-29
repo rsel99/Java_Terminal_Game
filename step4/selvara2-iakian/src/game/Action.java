@@ -29,4 +29,16 @@ public class Action {
     public String getName() {
         return this.name;
     }
+
+    public String getMessage(){
+        return this.msg;
+    }
+
+    public int getIntValue(){
+        return this.v;
+    }
+
+    public int getCharValue(){
+        return this.c;
+    }
 }

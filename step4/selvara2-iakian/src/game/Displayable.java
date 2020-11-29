@@ -1,22 +1,22 @@
 package game;
-import java.util.HashMap;
+import java.util.*;
 
 public class Displayable {
 
     protected int maxhit, hpMoves, Hp, v, x, y, w, h, visibility;
     protected char t;
-    protected HashMap<String, Action> actions;
+    protected ArrayList<Action> actions = new ArrayList<Action>();
 
     public Displayable(){
         System.out.println("Displayable: constructor, " + this);
     }
 
-    public void initActions() {
-        actions = new HashMap<String, Action>();
-    }
+    // public void initActions() {
+    //     actions = new HashMap<String, Action>();
+    // }
 
-    public void setAction(Action action) {
-        actions.put(action.getName(), action);
+    public void addAction(Action action) {
+        actions.add(action);
     }
 
     public void setInvisible() {
@@ -56,7 +56,7 @@ public class Displayable {
 
     public void setPosX(int x){
         this.x = x;
-        System.out.println("Displayable: stePosX to " + x);
+        System.out.println("Displayable: setPosX to " + x);
     }
 
     public void setPosY(int y){
@@ -113,7 +113,7 @@ public class Displayable {
         return this.visibility;
     }
 
-    public HashMap<String, Action> getActions() {
+    public ArrayList<Action> getActions() {
         return this.actions;
     }
 }

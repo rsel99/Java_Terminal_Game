@@ -193,16 +193,29 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                 updateInfo(action.getMessage());
                 break;
             case "droppack" :
-                processDropPack((Player) creature, (Room) this.dungeon.getPlayerLoc(), 0, 'd');
-                System.out.println(action.getMessage());
+                Player player = (Player) creature;
+                Room room = (Room) dungeon.getPlayerLoc();
+                if(player.getPackSize() > 0){
+                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+                    processDropPack(player, (Room) this.dungeon.getPlayerLoc(), 0, 'd');
+                    System.out.println(action.getMessage());
+                    
+                    displayGrid.addObjectToDisplay(player.getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+
+                }
                 updateInfo(action.getMessage());
                 break;
             case "emptypack" :
-                Player player = (Player) creature;
+                player = (Player) creature;
+                room = (Room) dungeon.getPlayerLoc();
+                displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
                 for (int i = 0; i < player.getPackSize(); i ++) {
                     processDropPack(player, (Room) this.dungeon.getPlayerLoc(), i, 'd');
+                    
                 }
+                displayGrid.addObjectToDisplay(player.getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
                 updateInfo(action.getMessage());
+                
                 break;
             default :
         }
@@ -278,12 +291,15 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
     }
 
     private void processDropPack(Player player, Room room, int index, char input){
+        
+        displayGrid.addObjectToDisplay(player.getItemFromPack(index).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
         Item item = player.getItemFromPack(index);
         item.setPosX(player.getPosX());
         item.setPosY(player.getPosY());
         if(input == 'd'){
             room.addItem(item);
         }
+        
         player.removeItemFromPack(index);
     }
 
@@ -1102,7 +1118,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                         }
-                                        displayGrid.addObjectToDisplay(player.getItemFromPack(0).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(0).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 0, input);
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
@@ -1230,7 +1246,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                         }
-                                        displayGrid.addObjectToDisplay(player.getItemFromPack(1).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(1).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 1, input);
                                         
                                     }
@@ -1359,7 +1375,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                         }
-                                        displayGrid.addObjectToDisplay(player.getItemFromPack(2).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(2).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 2, input);
                                         
                                     }
@@ -1488,7 +1504,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                         }
-                                        displayGrid.addObjectToDisplay(player.getItemFromPack(3).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(3).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 3, input);
                                         
                                     }
@@ -1615,7 +1631,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                         }
-                                        displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 4, input);
                                         
                                     }

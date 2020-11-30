@@ -356,7 +356,7 @@ public class RogueXMLHandler extends DefaultHandler {
             if(player){
                 Sword sword = (Sword) disps.pop();
                 Player player = (Player) disps.pop();
-                player.setWeapon(sword);
+                player.addToPack(sword);
                 disps.push(player);
             }
             else{
@@ -372,7 +372,7 @@ public class RogueXMLHandler extends DefaultHandler {
             if(player) {
                 Armor armor = (Armor) disps.pop();
                 Player player = (Player) disps.pop();
-                player.setArmor(armor);
+                player.addToPack(armor);
                 disps.push(player);
             }
             else {

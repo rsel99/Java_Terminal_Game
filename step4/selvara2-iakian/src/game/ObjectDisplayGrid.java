@@ -22,7 +22,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private LinkedList<String> info;
     private boolean hallucinate = false;
     private Dungeon dungeon;
-    private char playerHallucinateChar;
+    // private char playerHallucinateChar;
     private ArrayList<Character> chars = new ArrayList<Character>();
 
     public ObjectDisplayGrid(int _width, int _height, Dungeon dungeon) {
@@ -122,9 +122,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                         int val = rand.nextInt(chars.size());
                         temp.push(Character.valueOf((char) chars.get(val)));
                         temp.push(Character.valueOf((char)objectGrid[i][j].peek()));
-                        if((char)objectGrid[i][j].peek() == '@'){
-                            playerHallucinateChar = (char) val;
-                        }
+                        // if((char)objectGrid[i][j].peek() == '@'){
+                        //     playerHallucinateChar = (char) val;
+                        // }
                         objectGrid[i][j].pop();
                         // System.out.println(temp);
                     }
@@ -132,7 +132,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                         objectGrid[i][j].push(temp.pop());
                     }
                     writeToTerminal(i, j);
-                    System.out.println(objectGrid[i][j]);
+                    // System.out.println(objectGrid[i][j]);
                 }
                 
             }
@@ -187,7 +187,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                         objectGrid[i][j].push(temp.pop());
                     }
                     writeToTerminal(i, j);
-                    System.out.println(objectGrid[i][j]);
+                    // System.out.println(objectGrid[i][j]);
                 }
                 
             }
@@ -247,7 +247,9 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
                     // while(val < 33){
                     //     val = rand.nextInt(128);
                     // }
-                    objectGrid[x][y].push(Character.valueOf((char) playerHallucinateChar));
+                    Random rand = new Random();
+                    int val = rand.nextInt(chars.size());
+                    objectGrid[x][y].push(Character.valueOf((char) chars.get(val)));
                     
                 }
                 // System.out.println(objectGrid[x][y]);

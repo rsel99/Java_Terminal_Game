@@ -125,6 +125,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
             defender.setHp(0);
             defender.setMaxHit(0);
             //defender death actions
+            updateInfo(String.format("%s died", defender.getName()));
             if(defender.getActions().size() > 0){
                 for(Action action : defender.getActions()){
                     if(((CreatureAction) action).getType().equals("death")){
@@ -133,7 +134,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     }
                 }
             }
-            // updateInfo(String.format("%s died", defender.getName()));
+            
+            
         }
         else if (defender.getHp() - damage > 0) {
             defender.setHp(defender.getHp() - damage);

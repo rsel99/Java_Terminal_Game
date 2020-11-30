@@ -44,7 +44,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
 
     private void rest() {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -121,9 +121,6 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                 damage -= player.getArmor().getIntValue();
             }
         }
-        if (attacker.getHp() == 0) {
-            updateInfo(String.format("%s died", attacker.getName()));
-        }
         else if (defender.getHp() - damage <= 0) {
             defender.setHp(0);
             defender.setMaxHit(0);
@@ -132,14 +129,17 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                 for(Action action : defender.getActions()){
                     if(((CreatureAction) action).getType().equals("death")){
                         processDeathAction(action, defender);
+                        rest();
                     }
                 }
             }
-            updateInfo(String.format("%s died", defender.getName()));
+            // updateInfo(String.format("%s died", defender.getName()));
         }
         else if (defender.getHp() - damage > 0) {
             defender.setHp(defender.getHp() - damage);
             //defender hit actions
+            updateInfo(String.format("%s --> %s: -%d hp for %s", attacker.getName(), defender.getName(), damage, defender.getName()));
+            rest();
             if(defender.getActions().size() > 0){
                 for(Action action : defender.getActions()){
                     if(((CreatureAction) action).getType().equals("hit")){
@@ -147,18 +147,118 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     }
                 }
             }
-            updateInfo(String.format("%s --> %s: -%d hp for %s", attacker.getName(), defender.getName(), damage, defender.getName()));
         }
     }
 
     private void processHitAction(Action action, Creature creature){
         //fill in
         System.out.println("processing hit action");
+
+        switch (action.getName().toLowerCase()) {
+            case "teleport" :
+                ArrayList<Structure> structs = new ArrayList<Structure>(this.dungeon.getRooms());
+                // structs.addAll(this.dungeon.getPassages());
+                Random rand1 = new Random();
+                int j = rand1.nextInt(structs.size());
+
+                Structure struct = structs.get(j);
+
+                try {
+                    Room room = (Room) struct;
+
+                    Random rand2 = new Random();
+
+                    int x = rand2.nextInt(room.getWidth() - 1) + 1;
+                    int y = rand2.nextInt(room.getHeight() - 1) + 1;
+
+                    while ((char) objectGrid[x + room.getPosX()][y + dungeon.getTopHeight() + room.getPosY()].peek() != '.') {
+                        x = rand2.nextInt(room.getWidth() - 1) + 1;
+                        y = rand2.nextInt(room.getHeight() - 1) + 1;
+                    }
+                    
+                    displayGrid.removeObjectFromDisplay(creature.getPosX() + creature.getCreatLoc().getPosX(), creature.getPosY() + creature.getCreatLoc().getPosY() + dungeon.getTopHeight());
+                    creature.setPosX(x);
+                    creature.setPosY(y);
+                    if (creature.getName().equalsIgnoreCase("Player")) {
+                        this.dungeon.setPlayerLoc(room);
+                    }
+                    creature.setCreatLoc(room);
+                    displayGrid.addObjectToDisplay(creature.getType(), creature.getPosX() + room.getPosX(), creature.getPosY() + room.getPosY() + dungeon.getTopHeight());
+                }
+                catch (ClassCastException e) {
+                    Passage passage = (Passage) struct;
+                    System.out.println("Now in passage " + passage);
+                }
+
+                updateInfo(action.getMessage());
+                break;
+            case "droppack" :
+                processDropPack((Player) creature, (Room) this.dungeon.getPlayerLoc(), 0, 'd');
+                System.out.println(action.getMessage());
+                updateInfo(action.getMessage());
+                break;
+            case "emptypack" :
+                Player player = (Player) creature;
+                for (int i = 0; i < player.getPackSize(); i ++) {
+                    processDropPack(player, (Room) this.dungeon.getPlayerLoc(), i, 'd');
+                }
+                updateInfo(action.getMessage());
+                break;
+            default :
+        }
     }
 
     private void processDeathAction(Action action, Creature creature){
         //fill in
         System.out.println("processing death action");
+        Room room;
+        if (creature.getName().equalsIgnoreCase("Player")) {
+            room = (Room) this.dungeon.getPlayerLoc();
+        }
+        else {
+            room = (Room) creature.getCreatLoc();
+        }
+
+        switch (action.getName().toLowerCase()) {
+            case "remove" :
+                System.out.println("Remove");
+                displayGrid.removeObjectFromDisplay(room.getPosX() + creature.getPosX(), 
+                                                    dungeon.getTopHeight() + room.getPosY()
+                                                    + creature.getPosY());
+                break;
+            case "youwin" :
+                System.out.println("YouWin");
+                updateInfo(action.getMessage());
+                break;
+            case "changedisplaytype" :
+            case "changedisplayedtype" :
+                System.out.println("ChangeDisplayedType");
+                creature.setType(action.getCharValue());
+
+                displayGrid.removeObjectFromDisplay(room.getPosX() + creature.getPosX(),
+                        dungeon.getTopHeight() + room.getPosY() + creature.getPosY());
+                displayGrid.addObjectToDisplay(creature.getType(), room.getPosX() + creature.getPosX(),
+                                                dungeon.getTopHeight() + room.getPosY() + creature.getPosY());
+                break;
+            case "updatedisplay" :
+                System.out.println("UpdatedDisplay");
+                displayGrid.removeObjectFromDisplay(room.getPosX() + creature.getPosX(),
+                        dungeon.getTopHeight() + room.getPosY() + creature.getPosY());
+                displayGrid.addObjectToDisplay(creature.getType(), room.getPosX() + creature.getPosX(),
+                        dungeon.getTopHeight() + room.getPosY() + creature.getPosY());
+                
+                if (creature.getName().equalsIgnoreCase("Player")) {
+                    updatePlayerDisp((Player) creature);
+                }
+                break;
+            case "endgame" :
+                System.out.println("EndGame");
+                updateInfo(action.getMessage());
+                break;
+            default :
+                System.out.println("No name found");
+                break;
+        }
     }
 
     private void processAddPack(Player player, Room room, char currItem){
@@ -171,7 +271,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                 room.removeItem(i);
                 return;
             }
-            else{
+            else {
                 i = i + 1;
             }
         }
@@ -371,8 +471,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     }
                                     else if((next == 'S') || (next == 'T') || (next == 'H')){
                                         processMonsterHit(player, monster);
-                                        Thread.sleep(1000);
-                                        processMonsterHit(monster, player);
+                                        rest();
+                                        if (monster.getHp() > 0 && (((Room) monster.getCreatLoc()).getRoomNum() == ((Room) this.dungeon.getPlayerLoc()).getRoomNum())) {
+                                            processMonsterHit(monster, player);
+                                        }
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
                                             return false;
@@ -510,8 +612,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     }
                                     else if((next == 'S') || (next == 'T') || (next == 'H')){
                                         processMonsterHit(player, monster);
-                                        Thread.sleep(1000);
-                                        processMonsterHit(monster, player);
+                                        rest();
+                                        if (monster.getHp() > 0 && (((Room) monster.getCreatLoc()).getRoomNum() == ((Room) this.dungeon.getPlayerLoc()).getRoomNum())) {
+                                            processMonsterHit(monster, player);
+                                        }
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
                                             return false;
@@ -651,8 +755,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     }
                                     else if((next == 'S') || (next == 'T') || (next == 'H')){
                                         processMonsterHit(player, monster);
-                                        Thread.sleep(1000);
-                                        processMonsterHit(monster, player);
+                                        rest();
+                                        if (monster.getHp() > 0 && (((Room) monster.getCreatLoc()).getRoomNum() == ((Room) this.dungeon.getPlayerLoc()).getRoomNum())) {
+                                            processMonsterHit(monster, player);
+                                        }
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
                                             return false;
@@ -792,8 +898,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     }
                                     else if((next == 'S') || (next == 'T') || (next == 'H')){
                                         processMonsterHit(player, monster);
-                                        Thread.sleep(1000);
-                                        processMonsterHit(monster, player);
+                                        rest();
+                                        if (monster.getHp() > 0 && (((Room) monster.getCreatLoc()).getRoomNum() == ((Room) this.dungeon.getPlayerLoc()).getRoomNum())) {
+                                            processMonsterHit(monster, player);
+                                        }
                                         updatePlayerDisp(player);
                                         if (player.getHp() == 0) {
                                             return false;

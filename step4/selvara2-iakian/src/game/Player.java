@@ -20,13 +20,13 @@ public class Player extends Creature {
     
     public void setWeapon(Item sword){
         this.sword = sword;
-        checkPack(sword);
+        // checkPack(sword);
         System.out.println("Player: setWeapon to " + sword);
     }
 
     public void setArmor(Item armor){
         this.armor = armor;
-        checkPack(armor);
+        // checkPack(armor);
         System.out.println("Player: setArmor to " + armor);
     }
 

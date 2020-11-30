@@ -282,7 +282,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
         for(Item item : items){
             if(player.getPosX() == item.getPosX() && player.getPosY() == item.getPosY() && item.getType() == currItem){
                 player.addToPack(item);
-                System.out.println("entering for loop");
+                // System.out.println("entering for loop");
                 room.removeItem(i);
                 return;
             }
@@ -413,8 +413,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     switch(ch){
                         case 'h':
                             moveCountHP = moveCountHP + 1;
-                            moveCountHallucinate = moveCountHallucinate + 1;
+                            
                             if(hall == true){
+                                moveCountHallucinate = moveCountHallucinate + 1;
                                 displayGrid.refreshHallucinate();
                             }
                             clearLine(2);
@@ -559,8 +560,8 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                         case 'j':
                             clearLine(2);
                             moveCountHP = moveCountHP + 1;
-                            moveCountHallucinate = moveCountHallucinate + 1;
                             if(hall == true){
+                                moveCountHallucinate = moveCountHallucinate + 1;
                                 displayGrid.refreshHallucinate();
                             }
                             if(input == 'H'){
@@ -702,8 +703,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                         case 'k':
                             clearLine(2);
                             moveCountHP = moveCountHP + 1;
-                            moveCountHallucinate = moveCountHallucinate + 1;
+                            
                             if(hall == true){
+                                moveCountHallucinate = moveCountHallucinate + 1;
                                 displayGrid.refreshHallucinate();
                             }
                             if(input == 'H'){
@@ -845,8 +847,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                         case 'l':
                             clearLine(2);
                             moveCountHP = moveCountHP + 1;
-                            moveCountHallucinate = moveCountHallucinate + 1;
+                            
                             if(hall == true){
+                                moveCountHallucinate = moveCountHallucinate + 1;
                                 displayGrid.refreshHallucinate();
                             }
                             if(input == 'H'){
@@ -995,7 +998,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             }
                             else{
                                 Room room = (Room) loc;
-                                clearLine(0);
+                                // clearLine(0);
                                 clearLine(2);
                                 displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
                                 char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
@@ -1004,6 +1007,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // pack.add(next);
                                     // System.out.println(pack.get(0));
                                     String message = "Adding item to pack";
+                                    clearLine(0);
                                     for(int i = 0; i < message.length(); i++){
                                         displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                     }
@@ -1122,6 +1126,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         }
                                         // displayGrid.addObjectToDisplay(player.getItemFromPack(0).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 0, input);
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 }
@@ -1143,7 +1151,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setArmor(player.getItemFromPack(0));
                                         clearLine(0);
                                         // processDropPack(player, room, 0, input);
-                                        System.out.println("wearing armor");
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid wear armor request";
@@ -1169,7 +1181,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     if(player.getItemFromPack(0).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(0));
                                         clearLine(0);
-                                        System.out.println("wielding sword");
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid use weapon request";
@@ -1195,7 +1210,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(0)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(0)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1250,7 +1268,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         }
                                         // displayGrid.addObjectToDisplay(player.getItemFromPack(1).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 1, input);
-                                        
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 }
@@ -1271,7 +1292,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setArmor(player.getItemFromPack(1));
                                         clearLine(0);
                                         // processDropPack(player, room, 1, input);
-                                        System.out.println("wearing armor");
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid wear armor request";
@@ -1296,7 +1321,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // clearLine(0);
                                     if(player.getItemFromPack(1).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(1));
-                                        System.out.println("wielding sword");
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                         clearLine(0);
                                     }
                                     else{
@@ -1323,7 +1351,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(1)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(1)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1379,7 +1410,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         }
                                         // displayGrid.addObjectToDisplay(player.getItemFromPack(2).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 2, input);
-                                        
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 }
@@ -1400,7 +1434,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setArmor(player.getItemFromPack(2));
                                         clearLine(0);
                                         // processDropPack(player, room, 2, input);
-                                        System.out.println("wearing armor");
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid wear armor request";
@@ -1426,7 +1464,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     if(player.getItemFromPack(2).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(2));
                                         clearLine(0);
-                                        System.out.println("wielding sword");
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid use weapon request";
@@ -1452,7 +1493,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(2)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(2)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1508,7 +1552,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         }
                                         // displayGrid.addObjectToDisplay(player.getItemFromPack(3).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 3, input);
-                                        
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 }
@@ -1528,7 +1575,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         player.setArmor(player.getItemFromPack(3));
                                         clearLine(0);
                                         // processDropPack(player, room, 3, input);
-                                        System.out.println("wearing armor");
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     else{
                                         String message = "Invalid wear armor request";
@@ -1553,7 +1604,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     if(player.getItemFromPack(3).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(3));
-                                        System.out.println("wielding sword");
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                         clearLine(0);
                                     }
                                     else{
@@ -1580,7 +1634,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(3)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(3)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
@@ -1635,7 +1692,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         }
                                         // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                         processDropPack(player, room, 4, input);
-                                        
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                     }
                                     displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 }
@@ -1685,7 +1745,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     
                                     if(player.getItemFromPack(4).getType() == ')'){
                                         player.setWeapon(player.getItemFromPack(4));
-                                        System.out.println("wielding sword");
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
                                         clearLine(0);
                                     }
                                     else{
@@ -1712,11 +1775,578 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         if(((Displayable) player.getItemFromPack(4)).getActions() != null){
                                             ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(4)).getActions()).get(0);
                                             processScrollAction(action, player);
-                                            String message = action.getMessage() + " " + String.valueOf(action.getIntValue());
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
                                             for(int i = 0; i < message.length(); i++){
                                                 displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
                                             }
                                             player.removeItemFromPack(4);
+                                            clearLine(0);
+                                            System.out.println("reading scroll");
+                                        }
+                                        else{
+                                            System.out.println("reading ERROR");
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid read scroll request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid read scroll request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            break;
+                        case '6':
+                            // System.out.println(input);
+                            if(input == 'd'){
+                                clearLine(2);
+                                if(player.getPackSize() > 5){
+                                    clearLine(0);
+                                    // clearLine(2);
+                                    Room room = (Room) loc;
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
+                                        if(player.getArmor() != null && player.getItemFromPack(5) == player.getArmor()){
+                                            player.changeArmor();
+                                            String message = "Player has removed armor";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        else if(player.getWeapon() != null && player.getItemFromPack(5) == player.getWeapon()){
+                                            player.dropWeapon();
+                                            String message = "Player has dropped their weapon";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        processDropPack(player, room, 5, input);
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                }
+                                else{
+                                    String message = "Invalid drop request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'w'){
+                                clearLine(2);
+                                if(player.getPackSize() > 5){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(5).getType() == ']'){
+                                        player.setArmor(player.getItemFromPack(5));
+                                        clearLine(0);
+                                        // processDropPack(player, room, 4, input);
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid wear armor request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    // clearLine(2);
+                                    String message = "Invalid wear armor request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 't'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(5).getType() == ')'){
+                                        player.setWeapon(player.getItemFromPack(5));
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                        clearLine(0);
+                                    }
+                                    else{
+                                        String message = "Invalid use weapon request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid use weapon request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'r'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(5).getType() == '?'){
+                                        if(((Displayable) player.getItemFromPack(5)).getActions() != null){
+                                            ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(5)).getActions()).get(0);
+                                            processScrollAction(action, player);
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                            player.removeItemFromPack(5);
+                                            clearLine(0);
+                                            System.out.println("reading scroll");
+                                        }
+                                        else{
+                                            System.out.println("reading ERROR");
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid read scroll request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid read scroll request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            break;
+                        case '7':
+                            // System.out.println(input);
+                            if(input == 'd'){
+                                clearLine(2);
+                                if(player.getPackSize() > 6){
+                                    clearLine(0);
+                                    // clearLine(2);
+                                    Room room = (Room) loc;
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
+                                        if(player.getArmor() != null && player.getItemFromPack(6) == player.getArmor()){
+                                            player.changeArmor();
+                                            String message = "Player has removed armor";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        else if(player.getWeapon() != null && player.getItemFromPack(6) == player.getWeapon()){
+                                            player.dropWeapon();
+                                            String message = "Player has dropped their weapon";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        processDropPack(player, room, 6, input);
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                }
+                                else{
+                                    String message = "Invalid drop request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'w'){
+                                clearLine(2);
+                                if(player.getPackSize() > 6){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(6).getType() == ']'){
+                                        player.setArmor(player.getItemFromPack(6));
+                                        clearLine(0);
+                                        // processDropPack(player, room, 4, input);
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid wear armor request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    // clearLine(2);
+                                    String message = "Invalid wear armor request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 't'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(6).getType() == ')'){
+                                        player.setWeapon(player.getItemFromPack(6));
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                        clearLine(0);
+                                    }
+                                    else{
+                                        String message = "Invalid use weapon request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid use weapon request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'r'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(6).getType() == '?'){
+                                        if(((Displayable) player.getItemFromPack(6)).getActions() != null){
+                                            ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(6)).getActions()).get(0);
+                                            processScrollAction(action, player);
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                            player.removeItemFromPack(6);
+                                            clearLine(0);
+                                            System.out.println("reading scroll");
+                                        }
+                                        else{
+                                            System.out.println("reading ERROR");
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid read scroll request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid read scroll request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            break;
+                        case '8':
+                            // System.out.println(input);
+                            if(input == 'd'){
+                                clearLine(2);
+                                if(player.getPackSize() > 7){
+                                    clearLine(0);
+                                    // clearLine(2);
+                                    Room room = (Room) loc;
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
+                                        if(player.getArmor() != null && player.getItemFromPack(7) == player.getArmor()){
+                                            player.changeArmor();
+                                            String message = "Player has removed armor";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        else if(player.getWeapon() != null && player.getItemFromPack(7) == player.getWeapon()){
+                                            player.dropWeapon();
+                                            String message = "Player has dropped their weapon";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        processDropPack(player, room, 7, input);
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                }
+                                else{
+                                    String message = "Invalid drop request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'w'){
+                                clearLine(2);
+                                if(player.getPackSize() > 7){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(7).getType() == ']'){
+                                        player.setArmor(player.getItemFromPack(7));
+                                        clearLine(0);
+                                        // processDropPack(player, room, 4, input);
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid wear armor request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    // clearLine(2);
+                                    String message = "Invalid wear armor request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 't'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(7).getType() == ')'){
+                                        player.setWeapon(player.getItemFromPack(7));
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                        clearLine(0);
+                                    }
+                                    else{
+                                        String message = "Invalid use weapon request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid use weapon request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'r'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(7).getType() == '?'){
+                                        if(((Displayable) player.getItemFromPack(7)).getActions() != null){
+                                            ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(7)).getActions()).get(0);
+                                            processScrollAction(action, player);
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                            player.removeItemFromPack(7);
+                                            clearLine(0);
+                                            System.out.println("reading scroll");
+                                        }
+                                        else{
+                                            System.out.println("reading ERROR");
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid read scroll request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid read scroll request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            break;
+                        case '9':
+                            // System.out.println(input);
+                            if(input == 'd'){
+                                clearLine(2);
+                                if(player.getPackSize() > 8){
+                                    clearLine(0);
+                                    // clearLine(2);
+                                    Room room = (Room) loc;
+                                    displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
+                                        if(player.getArmor() != null && player.getItemFromPack(8) == player.getArmor()){
+                                            player.changeArmor();
+                                            String message = "Player has removed armor";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        else if(player.getWeapon() != null && player.getItemFromPack(8) == player.getWeapon()){
+                                            player.dropWeapon();
+                                            String message = "Player has dropped their weapon";
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                        }
+                                        // displayGrid.addObjectToDisplay(player.getItemFromPack(4).getType(), room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                        processDropPack(player, room, 8, input);
+                                        String message = "Player has dropped item from pack";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    displayGrid.addObjectToDisplay('@', room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                }
+                                else{
+                                    String message = "Invalid drop request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'w'){
+                                clearLine(2);
+                                if(player.getPackSize() > 8){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(8).getType() == ']'){
+                                        player.setArmor(player.getItemFromPack(8));
+                                        clearLine(0);
+                                        // processDropPack(player, room, 4, input);
+                                        // System.out.println("wearing armor");
+                                        String message = "Player is wearing armor";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                    else{
+                                        String message = "Invalid wear armor request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    // clearLine(2);
+                                    String message = "Invalid wear armor request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 't'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(8).getType() == ')'){
+                                        player.setWeapon(player.getItemFromPack(8));
+                                        String message = "Player is wielding a sword";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                        clearLine(0);
+                                    }
+                                    else{
+                                        String message = "Invalid use weapon request";
+                                        for(int i = 0; i < message.length(); i++){
+                                            displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                        }
+                                    }
+                                }
+                                else{
+                                    String message = "Invalid use weapon request";
+                                    for(int i = 0; i < message.length(); i++){
+                                        displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                    }
+                                }
+                                input = ' ';
+                            }
+                            else if (input == 'r'){
+                                clearLine(2);
+                                if(player.getPackSize() > 0){
+                                    Room room = (Room) loc;
+                                    
+                                    if(player.getItemFromPack(8).getType() == '?'){
+                                        if(((Displayable) player.getItemFromPack(8)).getActions() != null){
+                                            ItemAction action = (ItemAction) (((Displayable) player.getItemFromPack(8)).getActions()).get(0);
+                                            processScrollAction(action, player);
+                                            String message = action.getMessage();
+                                            if(hall == true){
+                                                message = message + " " + String.valueOf(action.getIntValue()) + " move(s)";
+                                            }
+                                            for(int i = 0; i < message.length(); i++){
+                                                displayGrid.addObjectToDisplay(message.charAt(i), 7 + i, this.dungeon.getTopHeight() + this.dungeon.getGameHeight() + 2);
+                                            }
+                                            player.removeItemFromPack(8);
                                             clearLine(0);
                                             System.out.println("reading scroll");
                                         }
@@ -1766,12 +2396,18 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                         String message = " ";
                                         if(player.getItemFromPack(i).getType() == ']'){
                                             message = String.valueOf((player.getItemFromPack(i)).getIntValue()) + " Armor";
+                                            if((player.getItemFromPack(i)).getIntValue() > 1){
+                                                message = "+" + message;
+                                            }
                                             if(player.getArmor() != null && player.getItemFromPack(i) == player.getArmor()){
                                                 message = message + " (a)";
                                             }
                                         }
                                         else if(player.getItemFromPack(i).getType() == ')'){
                                             message = String.valueOf((player.getItemFromPack(i)).getIntValue()) + " Sword";
+                                            if((player.getItemFromPack(i)).getIntValue() > 1){
+                                                message = "+" + message;
+                                            }
                                             if(player.getWeapon() != null && player.getItemFromPack(i) == player.getWeapon()){
                                                 message = message + " (w)";
                                             }
@@ -1851,7 +2487,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                         case 't':
                         case 'T':
                             clearLine(2);
-                            clearLine(0);
+                            // clearLine(0);
                             if(input == 'H'){
                                 // clearLine(2);
                                 String message = "command 't|T': take out weapon from pack";

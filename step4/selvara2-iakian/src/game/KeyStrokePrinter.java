@@ -21,7 +21,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
     private Stack[][] objectGrid;
     // private ArrayList<Item> pack = new ArrayList<>();
     private char input = ' ';
-    private int moveCount = 0;
+    private int moveCountHP = 0;
+    private int moveCountHallucinate = 0;
+    private int hallucinateCt = -1;
+    private boolean hall = false;
 
     public KeyStrokePrinter(ObjectDisplayGrid grid, Dungeon dungeon, Stack[][] characters) {
         inputQueue = new ConcurrentLinkedQueue<>();
@@ -199,7 +202,10 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
             }
         }
         else if(action.getName().equals("Hallucinate")){
-            System.out.println("hallucinate");
+            displayGrid.setHallucinate();
+            hallucinateCt = action.getIntValue();
+            System.out.println("starting hallucination");
+            hall = true;
         }
     }
 
@@ -272,14 +278,27 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                     // input = ' ';
                     
                     // System.out.println(objectGrid[0][0].peek());
-                    if(player.getHpMove() == moveCount){
+                    if(player.getHpMove() == moveCountHP){
                         player.setHp(player.getHp() + 1);
-                        moveCount = 0;
+                        moveCountHP = 0;
+                    }
+                    
+                    if(hallucinateCt == moveCountHallucinate){
+                        displayGrid.endHallucinate();
+                        System.out.println("ending hallucination");
+                        moveCountHallucinate = 0;
+                        hallucinateCt = -1;
+                        hall = false;
                     }
                     
                     updatePlayerDisp(player);
                     switch(ch){
                         case 'h':
+                            moveCountHP = moveCountHP + 1;
+                            moveCountHallucinate = moveCountHallucinate + 1;
+                            if(hall == true){
+                                displayGrid.refreshHallucinate();
+                            }
                             clearLine(2);
                             if(input == 'H'){
                                 // clearLine(2);
@@ -298,10 +317,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // System.out.println(room);
                                     // System.out.println(monster);
                                     // System.out.println((char) ch);
-                                    // moveCount = moveCount + 1;
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX() - 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    // moveCountHP = moveCountHP + 1;
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX() - 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
+                                    System.out.println(next);
                                     if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')) {
-                                        moveCount = moveCount + 1;
+                                        // moveCountHP = moveCountHP + 1;
 
                                         if (onDoor) {
                                             displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
@@ -361,7 +381,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 catch(ClassCastException e){
                                     Passage passage = (Passage) loc;
-                                    char next = (char) objectGrid[player.getPosX() - 1][player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(player.getPosX() - 1, player.getPosY());
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
                                         // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
@@ -418,6 +438,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             break;
                         case 'j':
                             clearLine(2);
+                            moveCountHP = moveCountHP + 1;
+                            moveCountHallucinate = moveCountHallucinate + 1;
+                            if(hall == true){
+                                displayGrid.refreshHallucinate();
+                            }
                             if(input == 'H'){
                                 // clearLine(2);
                                 String message = "command 'j': move player 1 space down";
@@ -432,9 +457,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     Monster monster = monsterNext(player, room, (char) ch);
                                     // System.out.println("HELLO");
                                     
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() + 1);
                                     if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                        moveCount = moveCount + 1;
+                                        // moveCountHP = moveCountHP + 1;
                                         if (onDoor) {
                                             displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(),
                                                     dungeon.getTopHeight() + room.getPosY() + player.getPosY());
@@ -495,7 +520,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 catch (ClassCastException e) {
                                     Passage passage = (Passage) loc;
-                                    char next = (char) objectGrid[player.getPosX()][player.getPosY() + 1].peek();
+                                    char next = (char) displayGrid.getObject(player.getPosX(), player.getPosY() + 1);
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
                                         // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
@@ -554,6 +579,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             break;
                         case 'k':
                             clearLine(2);
+                            moveCountHP = moveCountHP + 1;
+                            moveCountHallucinate = moveCountHallucinate + 1;
+                            if(hall == true){
+                                displayGrid.refreshHallucinate();
+                            }
                             if(input == 'H'){
                                 // clearLine(2);
                                 String message = "command 'k': move player 1 space up";
@@ -568,9 +598,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     Monster monster = monsterNext(player, room, (char) ch);
                                     // System.out.println("HELLO");
                                     
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY() - 1);
                                     if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                        moveCount = moveCount + 1;
+                                        // moveCountHP = moveCountHP + 1;
                                         if (onDoor) {
                                             displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(),
                                                     dungeon.getTopHeight() + room.getPosY() + player.getPosY());
@@ -631,7 +661,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 catch (ClassCastException e) {
                                     Passage passage = (Passage) loc;
-                                    char next = (char) objectGrid[player.getPosX()][player.getPosY() - 1].peek();
+                                    char next = (char) displayGrid.getObject(player.getPosX(), player.getPosY() - 1);
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
                                         // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
@@ -690,6 +720,11 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                             break;
                         case 'l':
                             clearLine(2);
+                            moveCountHP = moveCountHP + 1;
+                            moveCountHallucinate = moveCountHallucinate + 1;
+                            if(hall == true){
+                                displayGrid.refreshHallucinate();
+                            }
                             if(input == 'H'){
                                 // clearLine(2);
                                 String message = "command 'l': move player 1 space right";
@@ -707,9 +742,9 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // System.out.println(monster);
                                     // System.out.println((char) ch);
                                     
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX() + 1][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX() + 1, dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == '+') || (next == '.') || (next == '#') || (next == ']') || (next == '?') || (next == ')')){
-                                        moveCount = moveCount + 1;
+                                        
                                         if (onDoor) {
                                             displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                             // displayGrid.addObjectToDisplay(('+'), room.getPosX() + player.getPosX(), 
@@ -768,7 +803,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 }
                                 catch(ClassCastException e){
                                     Passage passage = (Passage) loc;
-                                    char next = (char) objectGrid[player.getPosX() + 1][player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(player.getPosX() + 1, player.getPosY());
                                     if (onDoor) {
                                         displayGrid.removeObjectFromDisplay(player.getPosX(), player.getPosY());
                                         // displayGrid.addObjectToDisplay('+', player.getPosX(), player.getPosY());
@@ -837,7 +872,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                 clearLine(0);
                                 clearLine(2);
                                 displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                 if((next == ']') || (next == ')') || (next == '?')){
                                     processAddPack(player, room, next);
                                     // pack.add(next);
@@ -943,7 +978,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // clearLine(2);
                                     Room room = (Room) loc;
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
                                         if(player.getArmor() != null && player.getItemFromPack(0) == player.getArmor()){
                                             player.changeArmor();
@@ -1071,7 +1106,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     clearLine(0);
                                     Room room = (Room) loc;
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
                                         if(player.getArmor() != null && player.getItemFromPack(1) == player.getArmor()){
                                             player.changeArmor();
@@ -1200,7 +1235,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                         
                                     Room room = (Room) loc;
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
                                         if(player.getArmor() != null && player.getItemFromPack(2) == player.getArmor()){
                                             player.changeArmor();
@@ -1329,7 +1364,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // clearLine(2);
                                     Room room = (Room) loc;
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
                                         if(player.getArmor() != null && player.getItemFromPack(3) == player.getArmor()){
                                             player.changeArmor();
@@ -1456,7 +1491,7 @@ public class KeyStrokePrinter implements InputObserver, Runnable {
                                     // clearLine(2);
                                     Room room = (Room) loc;
                                     displayGrid.removeObjectFromDisplay(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());                            
-                                    char next = (char) objectGrid[room.getPosX() + player.getPosX()][dungeon.getTopHeight() + room.getPosY() + player.getPosY()].peek();
+                                    char next = (char) displayGrid.getObject(room.getPosX() + player.getPosX(), dungeon.getTopHeight() + room.getPosY() + player.getPosY());
                                     if((next == ']') || (next == ')') || (next == '?') || (next == '.')){
                                         if(player.getArmor() != null && player.getItemFromPack(4) == player.getArmor()){
                                             player.changeArmor();

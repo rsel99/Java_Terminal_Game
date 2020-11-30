@@ -27,7 +27,7 @@ public class Rogue implements Runnable {
         WIDTH = width;
         HEIGHT = height;
 
-        displayGrid = new ObjectDisplayGrid(WIDTH, HEIGHT);
+        displayGrid = new ObjectDisplayGrid(WIDTH, HEIGHT, dungeon);
 
         objectGrid = new Stack[WIDTH][HEIGHT];
         characters = new Stack[WIDTH][HEIGHT];

@@ -20,11 +20,27 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
     private static int width;
 
     private LinkedList<String> info;
+    private boolean hallucinate = false;
+    private Dungeon dungeon;
+    private char playerHallucinateChar;
+    private ArrayList<Character> chars = new ArrayList<Character>();
 
-    public ObjectDisplayGrid(int _width, int _height) {
+    public ObjectDisplayGrid(int _width, int _height, Dungeon dungeon) {
         width = _width;
         height = _height;
+        this.dungeon = dungeon;
         terminal = new AsciiPanel(width, height);
+
+        chars.add('.');
+        chars.add('X');
+        chars.add('#');
+        chars.add('+');
+        chars.add('T');
+        chars.add('H');
+        chars.add('S');
+        chars.add('?');
+        chars.add(']');
+        chars.add(')');
 
         objectGrid = new Stack[width][height];
         for (int i = 0; i < width; i++) {
@@ -94,6 +110,121 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         terminal.repaint();
     }
 
+    public void setHallucinate(){
+        this.hallucinate = true;
+        for(int i = 0; i < width; i++){
+            for(int j = this.dungeon.getTopHeight(); j < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight()); j++){
+                if(objectGrid[i][j] != null && objectGrid[i][j].size() > 0){
+                    Stack<Character> temp = new Stack<Character>();
+                    while(objectGrid[i][j].size() > 0){
+                        // System.out.println(objectGrid[i][j]);
+                        Random rand = new Random();
+                        int val = rand.nextInt(chars.size());
+                        temp.push(Character.valueOf((char) chars.get(val)));
+                        temp.push(Character.valueOf((char)objectGrid[i][j].peek()));
+                        if((char)objectGrid[i][j].peek() == '@'){
+                            playerHallucinateChar = (char) val;
+                        }
+                        objectGrid[i][j].pop();
+                        // System.out.println(temp);
+                    }
+                    while(temp.size() > 0){
+                        objectGrid[i][j].push(temp.pop());
+                    }
+                    writeToTerminal(i, j);
+                    System.out.println(objectGrid[i][j]);
+                }
+                
+            }
+            
+        }
+    }
+
+    public void refreshHallucinate(){
+        for(int i = 0; i < width; i++){
+            for(int j = this.dungeon.getTopHeight(); j < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight()); j++){
+                if(objectGrid[i][j] != null && objectGrid[i][j].size() > 0){
+                    Stack<Character> temp = new Stack<Character>();
+                    while(objectGrid[i][j].size() > 0){
+                        // System.out.println(objectGrid[i][j]);
+                        // Random rand = new Random();
+                        // int val = rand.nextInt(127-33) + 33;
+                        // temp.push(Character.valueOf((char) val));
+                        objectGrid[i][j].pop();
+                        temp.push(Character.valueOf((char)objectGrid[i][j].peek()));
+                        objectGrid[i][j].pop();
+                        
+                        // System.out.println(temp);
+                    }
+                    while(temp.size() > 0){
+                        objectGrid[i][j].push(temp.pop());
+                    }
+                    // writeToTerminal(i, j);
+                    // System.out.println(objectGrid[i][j]);
+                }
+                
+            }
+            
+        }
+
+        for(int i = 0; i < width; i++){
+            for(int j = this.dungeon.getTopHeight(); j < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight()); j++){
+                if(objectGrid[i][j] != null && objectGrid[i][j].size() > 0){
+                    Stack<Character> temp = new Stack<Character>();
+                    while(objectGrid[i][j].size() > 0){
+                        // System.out.println(objectGrid[i][j]);
+                        Random rand = new Random();
+                        int val = rand.nextInt(10);
+                        temp.push(Character.valueOf((char) chars.get(val)));
+                        temp.push(Character.valueOf((char)objectGrid[i][j].peek()));
+                        // if((char)objectGrid[i][j].peek() == '@'){
+                        //     playerHallucinateChar = (char) val;
+                        // }
+                        objectGrid[i][j].pop();
+                        // System.out.println(temp);
+                    }
+                    while(temp.size() > 0){
+                        objectGrid[i][j].push(temp.pop());
+                    }
+                    writeToTerminal(i, j);
+                    System.out.println(objectGrid[i][j]);
+                }
+                
+            }
+            
+        }
+
+    }
+
+    public void endHallucinate(){
+        this.hallucinate = false;
+        for(int i = 0; i < width; i++){
+            for(int j = this.dungeon.getTopHeight(); j < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight()); j++){
+                if(objectGrid[i][j] != null && objectGrid[i][j].size() > 0){
+                    Stack<Character> temp = new Stack<Character>();
+                    while(objectGrid[i][j].size() > 0){
+                        // System.out.println(objectGrid[i][j]);
+                        // Random rand = new Random();
+                        // int val = rand.nextInt(127-33) + 33;
+                        // temp.push(Character.valueOf((char) val));
+                        objectGrid[i][j].pop();
+                        temp.push(Character.valueOf((char)objectGrid[i][j].peek()));
+                        objectGrid[i][j].pop();
+                        
+                        // System.out.println(temp);
+                    }
+                    while(temp.size() > 0){
+                        objectGrid[i][j].push(temp.pop());
+                    }
+                    writeToTerminal(i, j);
+                    System.out.println(objectGrid[i][j]);
+                }
+                
+            }
+            
+        }
+    }
+
     public void fireUp() {
         if (terminal.requestFocusInWindow()) {
             System.out.println(CLASSID + ".ObjectDisplayGrid(...) requestFocusInWindow Succeeded");
@@ -110,16 +241,42 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
         if ((0 <= x) && (x < width)) {
             if ((0 <= y) && (y < height)) {
                 objectGrid[x][y].push((Character) ch);
+                if(ch == '@' && hallucinate == true && y > this.dungeon.getTopHeight() && y < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight())){
+                    // Random rand = new Random();
+                    // int val = rand.nextInt(127-33) + 33;
+                    // while(val < 33){
+                    //     val = rand.nextInt(128);
+                    // }
+                    objectGrid[x][y].push(Character.valueOf((char) playerHallucinateChar));
+                    
+                }
                 // System.out.println(objectGrid[x][y]);
                 writeToTerminal(x, y);
             }
         }
     }
 
+    public char getObject(int x, int y){
+        if(hallucinate == true){
+            // && objectGrid[x][y].size() > 1
+            Character temp = (Character) (objectGrid[x][y]).pop();
+            System.out.println(temp);
+            System.out.println(objectGrid[x][y]);
+            char val = ((Character) (objectGrid[x][y]).peek()).charValue();
+            System.out.println(val);
+            objectGrid[x][y].push(temp);
+            return val;
+        }
+        return (char) ((Character) (objectGrid[x][y]).peek()).charValue();
+    }
+
     public void removeObjectFromDisplay(int x, int y) {
         if ((0 <= x) && (x < width)) {
             if ((0 <= y) && (y < height)) {
-                System.out.println(objectGrid[x][y]);
+                // System.out.println(objectGrid[x][y]);
+                if(hallucinate == true && y > this.dungeon.getTopHeight() && y < (this.dungeon.getTopHeight() + this.dungeon.getGameHeight())){
+                    objectGrid[x][y].pop();
+                }
                 objectGrid[x][y].pop();
                 writeToTerminal(x, y);
             }
@@ -128,6 +285,7 @@ public class ObjectDisplayGrid extends JFrame implements KeyListener, InputSubje
 
     private void writeToTerminal(int x, int y) {
         char ch = (char) objectGrid[x][y].peek();
+        // System.out.println(objectGrid[x][y]);
         terminal.write(ch, x, y);
         terminal.repaint();
     }

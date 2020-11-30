@@ -7,6 +7,7 @@ public class Creature extends Displayable {
     protected String name;
     protected ArrayList<CreatureAction> da = new ArrayList<CreatureAction>();
     protected ArrayList<CreatureAction> ha = new ArrayList<CreatureAction>();
+    protected Structure loc;
 
     public Creature(String name) {
         super();
@@ -29,6 +30,10 @@ public class Creature extends Displayable {
         System.out.println("Creature: setDeathAction to " + a);
     }
 
+    public void setCreatLoc(Structure struct) {
+        this.loc = struct;
+    }
+
     public void setHitAction(CreatureAction a){
         //(type CreatureAction???)
         this.ha.add(a);
@@ -45,5 +50,9 @@ public class Creature extends Displayable {
     
     public String getName() {
         return this.name;
+    }
+
+    public Structure getCreatLoc() {
+        return this.loc;
     }
 }

@@ -38,7 +38,7 @@ public class Action {
         return this.v;
     }
 
-    public int getCharValue(){
+    public char getCharValue(){
         return this.c;
     }
 }
